@@ -22,6 +22,7 @@ import { AppDispatch } from '@/src/redux/store';
 import theme from '@/src/theme';
 import { eye_off, eye_show, facebook_icon, google_ico } from '@/src/constants';
 import { SocialButtonProps } from '../types/auth.types';
+import SubmitButton from '../components/SubmitButton';
 
 type SignupScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
 
@@ -111,16 +112,11 @@ export default function SignupScreen() {
             </View>
           </View>
 
-          <TouchableOpacity
-            style={styles.signInButton}
+          <SubmitButton
+            title="Sign Up"
             onPress={handleSignup}
-            disabled={isLoading}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color={theme.colors.white} />
-            ) : (
-              <Text style={styles.b3_text}>Sign Up</Text>
-            )}
-          </TouchableOpacity>
+            isLoading={isLoading}
+          />
 
           <View style={styles.socialLoginContainer}>
             <View style={styles.divider}>

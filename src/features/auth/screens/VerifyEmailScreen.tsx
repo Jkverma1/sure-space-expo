@@ -19,6 +19,7 @@ import { RootState } from '@/src/redux/store';
 import theme from '@/src/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@/src/navigation/types';
+import SubmitButton from '../components/SubmitButton';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -72,18 +73,13 @@ export default function VerifyEmailScreen() {
         <Text style={styles.text}>Please verify your email to continue</Text>
         <Text style={styles.b1_text}>{userEmail}</Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleResend}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
-          ) : (
-            <Text style={styles.b3_text}>Resend Verification Email</Text>
-          )}
-        </TouchableOpacity>
-
+        <View style={styles.button}>
+          <SubmitButton
+            title="Resend Verification Email"
+            onPress={handleResend}
+            isLoading={isLoading}
+          />
+        </View>
         {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
       </View>
     </TouchableWithoutFeedback>
@@ -119,19 +115,8 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Bold',
   },
   button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: (screenWidth * 9) / 10,
-    height: 57,
-    marginTop: 51,
-    borderRadius: 45,
-    backgroundColor: theme.colors.primary,
-  },
-  b3_text: {
-    color: theme.colors.white,
-    fontSize: 19,
-    fontFamily: 'OpenSans-Bold',
-    fontWeight: '600',
+    paddingHorizontal: 16,
+    width: "100%",
   },
   errorText: {
     marginTop: 20,

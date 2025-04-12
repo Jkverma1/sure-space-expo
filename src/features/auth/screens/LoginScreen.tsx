@@ -15,13 +15,14 @@ import { useDispatch } from 'react-redux';
 
 import { eye_show, eye_off, google_ico, facebook_icon } from '@/src/constants';
 import { useNavigation } from '@react-navigation/native';
-import { SocialButtonProps } from '../types/auth.types';
 import { AuthStackParamList } from '@/src/navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import theme from '@/src/theme';
-import { validateEmail, validatePassword } from '@/src/utils/form';
+import { validateEmail } from '@/src/utils/form';
 import { login } from '@/src/redux/slices/userSlice';
 import { AppDispatch } from '@/src/redux/store';
+import { SocialButton } from '../components/SocialButton';
+import SubmitButton from '../components/SubmitButton';
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
 
@@ -106,16 +107,11 @@ export default function LoginScreen() {
           </View>
 
           {/* Login Button */}
-          <TouchableOpacity
-            style={styles.signInButton}
+          <SubmitButton
+            title="Sign In"
             onPress={handleLogin}
-            disabled={isLoading}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color={theme.colors.white} />
-            ) : (
-              <Text style={styles.b3_text}>Sign In</Text>
-            )}
-          </TouchableOpacity>
+            isLoading={isLoading}
+          />
 
           {/* Social Login */}
           <View style={styles.socialLoginContainer}>
@@ -143,12 +139,6 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
-
-const SocialButton: React.FC<SocialButtonProps> = ({ icon, onPress }) => (
-  <TouchableOpacity style={styles.socialButton} onPress={onPress}>
-    <Image source={icon} style={styles.socialIcon} />
-  </TouchableOpacity>
-);
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -232,20 +222,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  signInButton: {
-    backgroundColor: theme.colors.primary,
-    width: '100%',
-    height: 53,
-    justifyContent: 'center',
-    borderRadius: 40,
-    alignItems: 'center',
-    marginTop: 32,
-  },
-  b3_text: {
-    color: theme.colors.white,
-    fontSize: 21,
-    fontWeight: '600',
-  },
   socialLoginContainer: {
     alignItems: 'center',
     marginVertical: 32,
@@ -269,18 +245,6 @@ const styles = StyleSheet.create({
   socialButtonsContainer: {
     flexDirection: 'row',
     gap: 13,
-  },
-  socialButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: theme.colors.socialButtonBackground,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  socialIcon: {
-    width: 56,
-    height: 56,
   },
   signUpContainer: {
     flexDirection: 'row',

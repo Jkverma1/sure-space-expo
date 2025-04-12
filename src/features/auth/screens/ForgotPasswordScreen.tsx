@@ -18,6 +18,7 @@ import theme from '@/src/theme';
 import { validateEmail } from '@/src/utils/form';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@/src/navigation/types';
+import SubmitButton from '../components/SubmitButton';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -91,18 +92,12 @@ export default function ForgotPasswordScreen() {
         {!isLoading && errorMessage && (
           <Text style={styles.errorText}>{errorMessage}</Text>
         )}
+        <SubmitButton
+          title="Send Reset Email"
+          onPress={handlePasswordReset}
+          isLoading={isLoading}
+        />
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handlePasswordReset}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator size="small" color="#FFFFFF" />
-        ) : (
-          <Text style={styles.buttonText}>Send Reset Email</Text>
-        )}
-      </TouchableOpacity>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Don’t have an account? </Text>
