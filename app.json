@@ -3,11 +3,25 @@
     "name": "sure-space",
     "slug": "sure-space",
     "version": "1.0.0",
+    "extra": {
+      "HOST_URL": "http://172.191.158.85:5000",
+      "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyC2azTbonyQZIQ_ZYLtZMKZN62NR0iPymo",
+      "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "sure-space.firebaseapp.com",
+      "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "sure-space",
+      "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "sure-space.firebasestorage.app",
+      "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "1073724389439",
+      "EXPO_PUBLIC_FIREBASE_APP_ID": "1:1073724389439:web:3aa8f5c481f5a09aa9a08a",
+      "EXPO_FIREBASE_MEASUREMENT_ID": "G-2NBV905LZJ",
+      "EXPO_STREAM_CHAT_API_KEY": "u4t7pcggw6mp"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -18,24 +32,10 @@
       }
     },
     "web": {
-      "bundler": "metro",
-      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+      "expo-font"
+    ]
   }
 }

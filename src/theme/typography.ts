@@ -1,0 +1,80 @@
+const typography = {
+  h1: {
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    fontSize: 40,
+    lineHeight: 40,
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  h2: {
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    fontSize: 26,
+    lineHeight: 26,
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  h3: {
+    fontFamily: 'OpenSans',
+    fontWeight: '600',
+    fontSize: 20,
+    lineHeight: 20,
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  paragraph: {
+    fontFamily: 'OpenSans',
+    fontWeight: '600',
+    fontSize: 16,
+    lineHeight: 16,
+    letterSpacing: 0,
+  },
+  label: {
+    fontFamily: 'OpenSans',
+    fontWeight: '700',
+    fontSize: 16,
+    lineHeight: 16,
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  paragraphTitle: {
+    fontFamily: 'OpenSans',
+    fontWeight: '400',
+    fontSize: 14,
+    lineHeight: 14,
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  span: {
+    fontFamily: 'OpenSans',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: 12,
+    letterSpacing: 0,
+  },
+  // Adding new weights for SemiBold and Regular use
+  semiBold: {
+    fontFamily: 'OpenSans',
+    fontWeight: '600', 
+    fontSize: 16,
+    lineHeight: 16,
+    letterSpacing: 0,
+  },
+  bold: {
+    fontFamily: 'OpenSans',
+    fontWeight: '700', 
+    fontSize: 16,
+    lineHeight: 16,
+    letterSpacing: 0,
+  },
+  normal: {
+    fontFamily: 'OpenSans',
+    fontWeight: '400', 
+    fontSize: 16,
+    lineHeight: 16,
+    letterSpacing: 0,
+  },
+};
+
+export default typography;
