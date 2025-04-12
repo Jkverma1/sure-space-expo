@@ -1,6 +1,6 @@
 import axiosInstance from '@/src/types/axios';
-import { sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { sendEmailVerification, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../features/auth/hooks/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const loginUser = async (email: string, password: string) => {
@@ -31,7 +31,7 @@ export const loginUser = async (email: string, password: string) => {
     return response.data;
     }
     catch (error) {
-      console.error('Error logging in:', error);
+      console.log('Error logging in:', error);
       throw error;
     }
 };
@@ -49,3 +49,23 @@ export const logoutUser = async () => {
     throw error;
   }
 }
+
+export const registerUser = async (email: string, password: string) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const firebaseUser = userCredential.user;
+    await sendEmailVerification(firebaseUser);
+    return {
+      success: true,
+      message:
+        'Registration successful. A verification link has been sent to your email.',
+    };
+  } catch (error) {
+    console.log('Error registering:', error);
+    throw error;
+  }
+};

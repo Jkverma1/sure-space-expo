@@ -45,17 +45,11 @@ export default function LoginScreen() {
       return;
     }
 
-    if (!validatePassword(password)) {
-    setError(
-      'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
-    );
-    return;
-    }
-
     setError('');
     setIsLoading(true);
 
-    dispatch(login(email, password));
+    const res = await dispatch(login(email, password));
+    setError(res);
     setIsLoading(false);
   };
 

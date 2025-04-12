@@ -27,7 +27,8 @@ const colors = {
   validInput: '#4CAF50', // Border color for valid inputs
 
   // Miscellaneous
-  white: '#FFFFFF', // White color (for backgrounds, etc.)
+  white: '#FFFFFF', 
+  black: '#000000', 
 };
 
 export default colors;

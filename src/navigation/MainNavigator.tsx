@@ -8,7 +8,7 @@ const Tab = createBottomTabNavigator();
 
 export default function MainNavigator() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="Feed">
       <Tab.Screen name="Feed" component={FeedScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
