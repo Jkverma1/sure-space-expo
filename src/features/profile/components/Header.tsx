@@ -21,6 +21,8 @@ const Header: React.FC<HeaderProps> = ({
   showBack = true,
 }) => {
   const navigation = useNavigation();
+  const displayedTitle =
+    title.length > 15 ? `${title.substring(0, 15)}...` : title;
 
   return (
     <SafeAreaView edges={['top']} style={{ backgroundColor: '#fff' }}>
@@ -38,7 +40,13 @@ const Header: React.FC<HeaderProps> = ({
 
         {/* Title */}
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{title}</Text>
+          <Text
+            style={styles.title}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {displayedTitle}
+          </Text>
         </View>
 
         {/* Right Actions */}
@@ -89,6 +97,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     alignItems: 'center',
+    paddingHorizontal: 50,
   },
   title: {
     fontSize: 20,

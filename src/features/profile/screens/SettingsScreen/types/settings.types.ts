@@ -23,4 +23,5 @@ export type SettingStackParamList = {
   Help: undefined;
   DataUsage: undefined;
   SignOut: undefined;
+  PasswordChanged: undefined;
 };

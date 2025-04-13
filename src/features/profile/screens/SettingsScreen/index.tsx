@@ -8,6 +8,7 @@ import PrivacyPolicyScreen from './screens/PrivacyPolicyScreen';
 import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
 import HelpScreen from './screens/HelpScreen';
 import DataUsageScreen from './screens/DataUsageScreen';
+import PasswordChangedScreen from './screens/PasswordChangedScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function SettingsStack() {
       <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen} />
       <Stack.Screen name="Help" component={HelpScreen} />
       <Stack.Screen name="DataUsage" component={DataUsageScreen} />
+      <Stack.Screen name="PasswordChanged" component={PasswordChangedScreen} />
     </Stack.Navigator>
   );
 }
