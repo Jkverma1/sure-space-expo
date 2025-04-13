@@ -23,7 +23,8 @@ import theme from '@/src/theme';
 const screenWidth = Dimensions.get('window').width;
 
 const ChangePasswordScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<SettingStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<SettingStackParamList>>();
 
   const [password, setPassword] = useState('');
   const [cpassword, setCpassword] = useState('');
@@ -57,7 +58,7 @@ const ChangePasswordScreen = () => {
 
       if (!validatePassword(password)) {
         setReason(
-          'Password must be at least 8 characters long and include a capital letter, lowercase letter, number, and special character.'
+          'Password must be at least 8 characters long and include a capital letter, lowercase letter, number, and special character.',
         );
         setIsLoading(false);
         return;
@@ -76,7 +77,8 @@ const ChangePasswordScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.keyboard}>
+      style={styles.keyboard}
+    >
       <Header title="Change Password" />
       <View style={styles.container}>
         <Text style={styles.instructions}>
@@ -85,49 +87,51 @@ const ChangePasswordScreen = () => {
 
         {/* New Password */}
         <Text style={styles.label}>New Password</Text>
-               <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                placeholder="Password"
-                placeholderTextColor={theme.colors.placeholder}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!isPasswordVisible}
-                autoCapitalize="none"
-              />
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-                {isPasswordVisible ? (
-                  <Image source={eye_show} style={styles.icon} />
-                ) : (
-                  <Image source={eye_off} style={styles.icon} />
-                )}
-              </TouchableOpacity>
-            </View>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Password"
+            placeholderTextColor={theme.colors.placeholder}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!isPasswordVisible}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          >
+            {isPasswordVisible ? (
+              <Image source={eye_show} style={styles.icon} />
+            ) : (
+              <Image source={eye_off} style={styles.icon} />
+            )}
+          </TouchableOpacity>
+        </View>
 
         {/* Confirm Password */}
         <Text style={styles.label}>Confirm New Password</Text>
         <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                placeholder="Confirm Password"
-                placeholderTextColor={theme.colors.placeholder}
-                value={cpassword}
-                onChangeText={setCpassword}
-                secureTextEntry={!isCpasswordVisible}
-                autoCapitalize="none"
-              />
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={() => setIsCpasswordVisible(!isCpasswordVisible)}>
-                {isCpasswordVisible ? (
-                  <Image source={eye_show} style={styles.icon} />
-                ) : (
-                  <Image source={eye_off} style={styles.icon} />
-                )}
-              </TouchableOpacity>
-            </View>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Confirm Password"
+            placeholderTextColor={theme.colors.placeholder}
+            value={cpassword}
+            onChangeText={setCpassword}
+            secureTextEntry={!isCpasswordVisible}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setIsCpasswordVisible(!isCpasswordVisible)}
+          >
+            {isCpasswordVisible ? (
+              <Image source={eye_show} style={styles.icon} />
+            ) : (
+              <Image source={eye_off} style={styles.icon} />
+            )}
+          </TouchableOpacity>
+        </View>
 
         {/* Error Message */}
         {reason !== '' && !isLoading && (
@@ -154,7 +158,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: (screenWidth * 0.05),
+    paddingHorizontal: screenWidth * 0.05,
     backgroundColor: 'white',
   },
   instructions: {

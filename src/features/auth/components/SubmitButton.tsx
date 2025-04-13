@@ -1,7 +1,13 @@
 // components/SubmitButton.tsx
 import theme from '@/src/theme';
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
 interface Props {
   title: string;

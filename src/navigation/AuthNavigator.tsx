@@ -5,11 +5,14 @@ import ForgotPasswordScreen from '../features/auth/screens/ForgotPasswordScreen'
 import VerifyEmailScreen from '../features/auth/screens/VerifyEmailScreen';
 import { AuthStackParamList } from './types';
 
-const Stack = createNativeStackNavigator<AuthStackParamList>();;
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 export default function AuthNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Login"
+    >
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignupScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />

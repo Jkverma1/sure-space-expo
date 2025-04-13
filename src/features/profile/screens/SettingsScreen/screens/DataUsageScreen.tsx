@@ -13,7 +13,11 @@ import ConfirmModal from '../components/ConfirmModal';
 import { AppDispatch } from '@/src/redux/store';
 import { logout } from '@/src/redux/slices/userSlice';
 import theme from '@/src/theme';
-import { delete_modal_icon, deleteAccountIcon, deleteDataIcon } from '@/src/constants';
+import {
+  delete_modal_icon,
+  deleteAccountIcon,
+  deleteDataIcon,
+} from '@/src/constants';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -21,7 +25,8 @@ const DataUsageScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [deleteDataModalVisible, setDeleteDataModalVisible] = useState(false);
-  const [deleteAccountModalVisible, setDeleteAccountModalVisible] = useState(false);
+  const [deleteAccountModalVisible, setDeleteAccountModalVisible] =
+    useState(false);
 
   const handleClickSkip = () => {
     setDeleteDataModalVisible(false);
@@ -43,7 +48,7 @@ const DataUsageScreen = () => {
   return (
     <View style={styles.container}>
       <Header title="Data Usage" />
-      
+
       {/* Delete Data Modal */}
       <ConfirmModal
         modalVisible={deleteDataModalVisible}

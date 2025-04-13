@@ -56,21 +56,21 @@ const typography = {
   // Adding new weights for SemiBold and Regular use
   semiBold: {
     fontFamily: 'OpenSans',
-    fontWeight: '600', 
+    fontWeight: '600',
     fontSize: 16,
     lineHeight: 16,
     letterSpacing: 0,
   },
   bold: {
     fontFamily: 'OpenSans',
-    fontWeight: '700', 
+    fontWeight: '700',
     fontSize: 16,
     lineHeight: 16,
     letterSpacing: 0,
   },
   normal: {
     fontFamily: 'OpenSans',
-    fontWeight: '400', 
+    fontWeight: '400',
     fontSize: 16,
     lineHeight: 16,
     letterSpacing: 0,

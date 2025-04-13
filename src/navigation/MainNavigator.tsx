@@ -14,7 +14,14 @@ export default function MainNavigator() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName: 'chatbubble' | 'chatbubble-outline' | 'home' | 'home-outline' | 'person' | 'person-outline' | undefined;
+          let iconName:
+            | 'chatbubble'
+            | 'chatbubble-outline'
+            | 'home'
+            | 'home-outline'
+            | 'person'
+            | 'person-outline'
+            | undefined;
 
           if (route.name === 'Chat') {
             iconName = focused ? 'chatbubble' : 'chatbubble-outline';

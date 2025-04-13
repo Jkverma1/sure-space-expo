@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -73,7 +67,9 @@ export default function ProfileMainScreen() {
         <View style={styles.refferal_btn_container}>
           <View style={styles.icon_row}>
             <Image source={download_ico} style={styles.referral_icon} />
-            <Text style={styles.people_count_text}>{downloaded} Downloaded</Text>
+            <Text style={styles.people_count_text}>
+              {downloaded} Downloaded
+            </Text>
           </View>
           <View style={styles.icon_row}>
             <Image source={signed_up} style={styles.referral_icon} />

@@ -24,7 +24,10 @@ import SubmitButton from '../components/SubmitButton';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-type VerifyEmailScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'VerifyEmail'>;
+type VerifyEmailScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'VerifyEmail'
+>;
 
 export default function VerifyEmailScreen() {
   const navigation = useNavigation<VerifyEmailScreenNavigationProp>();
@@ -40,7 +43,7 @@ export default function VerifyEmailScreen() {
         await auth.currentUser.reload();
         if (auth.currentUser.emailVerified) {
           clearInterval(interval);
-          navigation.navigate("Login"); 
+          navigation.navigate('Login');
         }
       }
     }, 3000);
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingHorizontal: 16,
-    width: "100%",
+    width: '100%',
   },
   errorText: {
     marginTop: 20,

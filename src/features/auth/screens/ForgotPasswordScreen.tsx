@@ -22,7 +22,10 @@ import SubmitButton from '../components/SubmitButton';
 
 const screenWidth = Dimensions.get('window').width;
 
-type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'ForgotPassword'>;
+type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'ForgotPassword'
+>;
 
 export default function ForgotPasswordScreen() {
   const navigation = useNavigation<ForgotPasswordScreenNavigationProp>();
@@ -53,7 +56,7 @@ export default function ForgotPasswordScreen() {
 
       Alert.alert(
         'Success',
-        'A password reset email has been sent to your email address. Please check your inbox and follow the instructions.'
+        'A password reset email has been sent to your email address. Please check your inbox and follow the instructions.',
       );
 
       navigation.navigate('Login' as never);
@@ -82,7 +85,7 @@ export default function ForgotPasswordScreen() {
           placeholder="Enter email"
           placeholderTextColor="#969596"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -101,7 +104,9 @@ export default function ForgotPasswordScreen() {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp' as never)}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SignUp' as never)}
+        >
           <Text style={styles.signUpText}>Sign Up</Text>
           <View style={styles.underline} />
         </TouchableOpacity>

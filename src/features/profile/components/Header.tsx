@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -40,11 +34,7 @@ const Header: React.FC<HeaderProps> = ({
 
         {/* Title */}
         <View style={styles.titleContainer}>
-          <Text
-            style={styles.title}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
             {displayedTitle}
           </Text>
         </View>

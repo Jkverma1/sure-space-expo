@@ -22,7 +22,7 @@ import theme from '@/src/theme';
 export default function InviteFriendsScreen() {
   const user = useSelector((state: any) => state.user.user);
   const referralCode = user?.referralCode || '';
-  const appname = "Sure Space";
+  const appname = 'Sure Space';
   const appLink = `https://apps.apple.com/in/app/sure-space/id6730121865?ref=${referralCode}`;
 
   const shareToSocial = (platform: string) => {
@@ -43,7 +43,7 @@ export default function InviteFriendsScreen() {
       default:
         return;
     }
-    Linking.openURL(url).catch(err => console.log('An error occurred', err));
+    Linking.openURL(url).catch((err) => console.log('An error occurred', err));
   };
 
   return (
@@ -57,19 +57,31 @@ export default function InviteFriendsScreen() {
         <Text style={styles.subText}>Invite friends and use app together</Text>
         <Text style={styles.shareTitle}>Share via</Text>
         <View style={styles.shareContainer}>
-          <TouchableOpacity style={styles.shareButton} onPress={() => shareToSocial('facebook')}>
+          <TouchableOpacity
+            style={styles.shareButton}
+            onPress={() => shareToSocial('facebook')}
+          >
             <Image style={styles.shareIcon} source={facebook_ico} />
             <Text style={styles.shareText}>Facebook</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.shareButton} onPress={() => shareToSocial('instagram')}>
+          <TouchableOpacity
+            style={styles.shareButton}
+            onPress={() => shareToSocial('instagram')}
+          >
             <Image style={styles.shareIcon} source={instagram_ico} />
             <Text style={styles.shareText}>Instagram</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.shareButton} onPress={() => shareToSocial('tiktok')}>
+          <TouchableOpacity
+            style={styles.shareButton}
+            onPress={() => shareToSocial('tiktok')}
+          >
             <Image style={styles.shareIcon} source={tiktok_ico} />
             <Text style={styles.shareText}>TikTok</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.shareButton} onPress={() => shareToSocial('whatsapp')}>
+          <TouchableOpacity
+            style={styles.shareButton}
+            onPress={() => shareToSocial('whatsapp')}
+          >
             <Image style={styles.shareIcon} source={whatsapp_ico} />
             <Text style={styles.shareText}>WhatsApp</Text>
           </TouchableOpacity>

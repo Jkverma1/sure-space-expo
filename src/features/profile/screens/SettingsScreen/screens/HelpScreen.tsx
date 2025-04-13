@@ -50,13 +50,15 @@ const faqs = [
         <TouchableOpacity
           onPress={() =>
             Linking.openURL('https://myndpa.co.uk/privacy-policy/')
-          }>
+          }
+        >
           <Text
             style={{
               color: theme.colors.primary,
               textDecorationLine: 'underline',
               fontSize: 16,
-            }}>
+            }}
+          >
             here
           </Text>
         </TouchableOpacity>
@@ -94,10 +96,13 @@ const HelpScreen = () => {
                 <View style={styles.faqItem}>
                   <TouchableOpacity
                     style={styles.row}
-                    onPress={() => toggleExpand(index)}>
+                    onPress={() => toggleExpand(index)}
+                  >
                     <Text style={styles.question}>{faq.text}</Text>
                     <Image
-                      source={expandedIndex === index ? upArrowIcon : dropArrowIcon}
+                      source={
+                        expandedIndex === index ? upArrowIcon : dropArrowIcon
+                      }
                     />
                   </TouchableOpacity>
                   {expandedIndex === index && (

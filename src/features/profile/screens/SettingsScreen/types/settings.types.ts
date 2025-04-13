@@ -4,14 +4,14 @@ export interface ConfirmModalProps {
   handleClick: () => void;
   handleClickSkip: () => void;
   text: string;
-  icon?: any; 
+  icon?: any;
 }
 
 export type SettingsItem = {
   id: string;
   name: string;
   icon: any;
-  screen: keyof SettingStackParamList; 
+  screen: keyof SettingStackParamList;
 };
 
 export type SettingStackParamList = {

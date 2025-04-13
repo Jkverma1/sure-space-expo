@@ -24,7 +24,10 @@ import { eye_off, eye_show, facebook_icon, google_ico } from '@/src/constants';
 import { SocialButtonProps } from '../types/auth.types';
 import SubmitButton from '../components/SubmitButton';
 
-type SignupScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'SignUp'>;
+type SignupScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'SignUp'
+>;
 
 export default function SignupScreen() {
   const navigation = useNavigation<SignupScreenNavigationProp>();
@@ -49,7 +52,7 @@ export default function SignupScreen() {
 
     if (!validatePassword(password)) {
       setError(
-        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
+        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.',
       );
       return;
     }
@@ -79,7 +82,9 @@ export default function SignupScreen() {
             <TextInput
               style={[
                 styles.input,
-                !validateEmail(email) && email.length > 0 ? styles.invalidInput : {},
+                !validateEmail(email) && email.length > 0
+                  ? styles.invalidInput
+                  : {},
               ]}
               placeholder="Enter email"
               placeholderTextColor={theme.colors.placeholder}
@@ -103,7 +108,8 @@ export default function SignupScreen() {
               />
               <TouchableOpacity
                 style={styles.eyeIcon}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              >
                 <Image
                   source={isPasswordVisible ? eye_show : eye_off}
                   style={styles.icon}
@@ -120,14 +126,14 @@ export default function SignupScreen() {
 
           <View style={styles.socialLoginContainer}>
             <View style={styles.divider}>
-                        <View style={styles.dividerLine} />
-                        <Text style={styles.dividerText}>or</Text>
-                        <View style={styles.dividerLine} />
-                      </View>
-          
-                      <View style={styles.socialButtonsContainer}>
-                        <SocialButton icon={google_ico} onPress={() => {}} />
-                        <SocialButton icon={facebook_icon} onPress={() => {}} />
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <View style={styles.socialButtonsContainer}>
+              <SocialButton icon={google_ico} onPress={() => {}} />
+              <SocialButton icon={facebook_icon} onPress={() => {}} />
             </View>
           </View>
 

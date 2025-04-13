@@ -7,7 +7,7 @@ export type ProfileStackParamList = {
 export type MenuItemType = {
   name: string;
   screen: keyof ProfileStackParamList;
-  image: any; 
+  image: any;
 };
 
 export interface HeaderProps {

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
@@ -9,10 +9,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ThemeProvider } from './src/theme/ThemeProvider';
 import AppNavigator from './src/navigation/AppNavigator';
 
-
 export default function App() {
-    const [fontsLoaded] = Font.useFonts({
-    'OpenSans': require('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf'),
+  const [fontsLoaded] = Font.useFonts({
+    OpenSans: require('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf'),
   });
 
   useEffect(() => {
@@ -21,15 +20,15 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-    if (!fontsLoaded) return null;
-    
+  if (!fontsLoaded) return null;
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <SafeAreaProvider>
           <NavigationContainer>
             <ThemeProvider>
-                <AppNavigator />
+              <AppNavigator />
             </ThemeProvider>
           </NavigationContainer>
         </SafeAreaProvider>

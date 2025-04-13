@@ -8,9 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MenuItemType, ProfileStackParamList } from '../types/profile.types';
 
 const screenWidth = Dimensions.get('screen').width;
@@ -20,7 +18,8 @@ type Props = {
 };
 
 const MenuList: React.FC<Props> = ({ data }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
 
   const handleClick = (item: MenuItemType) => {
     if (item?.screen) {
@@ -68,12 +67,12 @@ const styles = StyleSheet.create({
     height: 170,
     flex: 1,
     marginHorizontal: 10,
-    backgroundColor: "#FFDAB91A",
-    borderColor: "#FBC4AB",
+    backgroundColor: '#FFDAB91A',
+    borderColor: '#FBC4AB',
     borderWidth: 1,
     borderRadius: 15,
     padding: 12,
-    justifyContent: "center",
+    justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
@@ -84,11 +83,11 @@ const styles = StyleSheet.create({
   itemText: {
     marginTop: 10,
     fontSize: 18,
-    fontFamily: "Open Sans",
+    fontFamily: 'Open Sans',
     lineHeight: 24.51,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: "#1E1D20",
+    color: '#1E1D20',
   },
 });
 

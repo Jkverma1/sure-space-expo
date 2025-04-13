@@ -28,11 +28,7 @@ const PasswordChangedScreen = () => {
       <Text style={styles.subtitle}>
         You have successfully{'\n'}changed your password.
       </Text>
-        <SubmitButton
-          title="Log In"
-          onPress={handleLogout}
-          isLoading={false}
-        />
+      <SubmitButton title="Log In" onPress={handleLogout} isLoading={false} />
     </View>
   );
 };

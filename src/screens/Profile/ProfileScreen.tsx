@@ -8,7 +8,10 @@ const Stack = createNativeStackNavigator();
 
 export default function ProfileScreen() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ProfileMain">
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="ProfileMain"
+    >
       <Stack.Screen name="ProfileMain" component={ProfileMainScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="InviteFriends" component={InviteFriendsScreen} />

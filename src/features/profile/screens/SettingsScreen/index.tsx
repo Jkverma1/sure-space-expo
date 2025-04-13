@@ -14,13 +14,22 @@ const Stack = createNativeStackNavigator();
 
 export default function SettingsStack() {
   return (
-    <Stack.Navigator initialRouteName="SettingsMain" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      initialRouteName="SettingsMain"
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="SettingsMain" component={SettingsMainScreen} />
-      <Stack.Screen name="PersonalInformation" component={PersonalInformationScreen} />
+      <Stack.Screen
+        name="PersonalInformation"
+        component={PersonalInformationScreen}
+      />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
-      <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen} />
+      <Stack.Screen
+        name="TermsAndConditions"
+        component={TermsAndConditionsScreen}
+      />
       <Stack.Screen name="Help" component={HelpScreen} />
       <Stack.Screen name="DataUsage" component={DataUsageScreen} />
       <Stack.Screen name="PasswordChanged" component={PasswordChangedScreen} />

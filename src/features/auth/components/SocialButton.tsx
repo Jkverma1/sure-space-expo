@@ -1,8 +1,11 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
-import { SocialButtonProps } from "../types/auth.types";
-import theme from "@/src/theme";
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { SocialButtonProps } from '../types/auth.types';
+import theme from '@/src/theme';
 
-export const SocialButton: React.FC<SocialButtonProps> = ({ icon, onPress }) => (
+export const SocialButton: React.FC<SocialButtonProps> = ({
+  icon,
+  onPress,
+}) => (
   <TouchableOpacity style={styles.socialButton} onPress={onPress}>
     <Image source={icon} style={styles.socialIcon} />
   </TouchableOpacity>

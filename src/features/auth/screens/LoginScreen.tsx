@@ -24,7 +24,10 @@ import { AppDispatch } from '@/src/redux/store';
 import { SocialButton } from '../components/SocialButton';
 import SubmitButton from '../components/SubmitButton';
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<AuthStackParamList, 'Login'>;
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'Login'
+>;
 
 export default function LoginScreen() {
   const navigation = useNavigation<LoginScreenNavigationProp>();
@@ -67,7 +70,9 @@ export default function LoginScreen() {
             <TextInput
               style={[
                 styles.input,
-                !validateEmail(email) && email.length > 0 ? styles.invalidInput : {},
+                !validateEmail(email) && email.length > 0
+                  ? styles.invalidInput
+                  : {},
               ]}
               placeholder="Enter email"
               placeholderTextColor={theme.colors.placeholder}
@@ -79,7 +84,7 @@ export default function LoginScreen() {
             {error && <Text style={styles.errorText}>{error}</Text>}
 
             {/* Password Input */}
-            <Text style={{...styles.b1_text, marginTop: 32}}>Password</Text>
+            <Text style={{ ...styles.b1_text, marginTop: 32 }}>Password</Text>
             <View style={styles.passwordContainer}>
               <TextInput
                 style={styles.passwordInput}
@@ -92,7 +97,8 @@ export default function LoginScreen() {
               />
               <TouchableOpacity
                 style={styles.eyeIcon}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              >
                 {isPasswordVisible ? (
                   <Image source={eye_show} style={styles.icon} />
                 ) : (
@@ -101,7 +107,10 @@ export default function LoginScreen() {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={styles.forgotPassword}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ForgotPassword')}
+              style={styles.forgotPassword}
+            >
               <Text style={styles.b2_text}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
@@ -180,7 +189,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 14,
     color: theme.colors.primary,
-    fontWeight: "600"
+    fontWeight: '600',
   },
   invalidInput: {
     borderColor: theme.colors.error,

@@ -14,16 +14,16 @@ export default function AppNavigator() {
       const token = await AsyncStorage.getItem('token');
       if (token) {
         dispatch(initializeApp(token));
-      }
-      else {
+      } else {
         dispatch(initializedApp());
       }
-    }
+    };
     initialize();
-  }
-  , []);
-  const { isAuthenticated, isInitializing } = useSelector((state: RootState) => state.user);
-  
+  }, []);
+  const { isAuthenticated, isInitializing } = useSelector(
+    (state: RootState) => state.user,
+  );
+
   if (isInitializing) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -32,9 +32,5 @@ export default function AppNavigator() {
     );
   }
 
-  return (
-    <>
-      {isAuthenticated ? <MainNavigator /> : <AuthNavigator />}
-    </>
-  );
+  return <>{isAuthenticated ? <MainNavigator /> : <AuthNavigator />}</>;
 }
