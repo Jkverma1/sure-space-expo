@@ -105,5 +105,5 @@ export const language_ico = require('../../assets/icons/Settings/language_ico.pn
 export const region_ico = require('../../assets/icons/Settings/region_ico.png');
 export const deleteAccountIcon = require('../../assets/icons/Settings/delete_account.png');
 export const deleteDataIcon = require('../../assets/icons/Settings/delete_data.png');
-export const deleteDataModalIcon = require('../../assets/icons/Settings/delete_modal_icon.png');
+export const delete_modal_icon = require('../../assets/icons/Settings/delete_modal_icon.png');
 export const search = require('../../assets/icons/Settings/mdi_magnify.png');
