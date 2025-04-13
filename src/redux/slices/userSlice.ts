@@ -1,15 +1,33 @@
 // src/store/userSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginUser, logoutUser, registerUser } from '@/src/api/auth';
+import { getUserData, loginUser, logoutUser, registerUser } from '@/src/api/auth';
 
 interface UserState {
   isAuthenticated: boolean;
+  isInitializing: boolean;
   user: any | null;
 }
 
 const initialState: UserState = {
   isAuthenticated: false,
+  isInitializing: true,
   user: null,
+};
+
+export const initializeApp = (token: string) => async (dispatch: any) => {
+  try {
+    const userData = await getUserData(token);
+    const {user} = userData.data;
+    dispatch(loginSuccess({
+      user: user,
+    }));
+    dispatch(initializedApp());
+    return "Login successful";
+  } catch (error) {
+    dispatch(initializedApp());
+    console.log('Login failed:', error);
+    return "Invalid credentials.";
+  }
 };
 
 export const login = (email: string, password: string) => async (dispatch: any) => {
@@ -28,7 +46,7 @@ export const login = (email: string, password: string) => async (dispatch: any) 
 
 export const logout = () => async (dispatch: any) => {
   try {
-    dispatch(logoutUser());
+    await logoutUser();
     dispatch(logoutSuccess());
   } catch (error) {
     console.log('Logout failed:', error);
@@ -46,10 +64,15 @@ export const register = (email: string, password: string) => async (dispatch: an
 };
 
 
+
+
 const userSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    initializedApp: (state) => {
+      state.isInitializing = false;
+    },
     loginSuccess: (
       state,
       action: PayloadAction<{ user: any }>
@@ -64,6 +87,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logoutSuccess } = userSlice.actions;
+export const { loginSuccess, logoutSuccess, initializedApp } = userSlice.actions;
 
 export default userSlice.reducer;

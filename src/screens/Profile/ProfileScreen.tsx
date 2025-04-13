@@ -1,12 +1,17 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ProfileMainScreen from '@/src/features/profile/screens/ProfileMainScreen';
+import SettingsScreen from '@/src/features/profile/screens/SettingsScreen';
+import InviteFriendsScreen from '@/src/features/profile/screens/InviteFriendsScreen';
 
-const ProfileScreen = () => {
+const Stack = createNativeStackNavigator();
+
+export default function ProfileScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>📰 Profile</Text>
-    </View>
-  )
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ProfileMain">
+      <Stack.Screen name="ProfileMain" component={ProfileMainScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="InviteFriends" component={InviteFriendsScreen} />
+    </Stack.Navigator>
+  );
 }
-
-export default ProfileScreen

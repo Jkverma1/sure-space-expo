@@ -69,3 +69,17 @@ export const registerUser = async (email: string, password: string) => {
     throw error;
   }
 };
+
+export const getUserData = async (token: string) => {
+  try {
+    const response = await axiosInstance.get(`/user/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data; 
+  } catch (error) {
+    console.log("Error fetching user data:", error);
+    throw new Error('Failed to fetch user data');
+  }
+};
