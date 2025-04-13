@@ -107,3 +107,4 @@ export const deleteAccountIcon = require('../../assets/icons/Settings/delete_acc
 export const deleteDataIcon = require('../../assets/icons/Settings/delete_data.png');
 export const delete_modal_icon = require('../../assets/icons/Settings/delete_modal_icon.png');
 export const search = require('../../assets/icons/Settings/mdi_magnify.png');
+export const mdi_camera = require('../../assets/icons/Settings/mdi_camera.png');
