@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
-import { Channel } from 'stream-chat';
 import { fetchChannels as fetchChannelsFromService } from '@/src/features/chat/services/chatService';
 import { RootState } from '@/src/redux/store';
 
 interface ChatState {
-  channels: Channel[];
+  channels: any[];
 }
 
 const initialState: ChatState = {
@@ -29,8 +28,8 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    setChannels(state, action: PayloadAction<{ channels: Channel[] }>) {
-      state.channels = action.payload.channels as WritableDraft<Channel>[];
+    setChannels(state, action: PayloadAction<{ channels: any[] }>) {
+      state.channels = action.payload.channels as WritableDraft<any>[];
     },
     clearChannels(state) {
       state.channels = [];

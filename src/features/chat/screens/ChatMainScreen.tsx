@@ -42,9 +42,7 @@ const ChatMainScreen = () => {
   const cachedChannels = useSelector((state: RootState) => state.chat.channels);
   const user = useSelector((state: RootState) => state.user.user);
 
-  const [filteredChannels, setFilteredChannels] = useState<
-    any[]
-  >([]);
+  const [filteredChannels, setFilteredChannels] = useState<any[]>([]);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
@@ -65,9 +63,10 @@ const ChatMainScreen = () => {
 
   const handleSearch = (text: string) => {
     setSearchText(text);
-    const filtered: Channel<DefaultGenerics>[] = cachedChannels.filter(
-      (channel: any) =>
-        channel.members.fullName.toLowerCase().includes(text.toLowerCase()),
+    const filtered: any[] = cachedChannels.filter((channel: any) =>
+      channel.members?.some((member: any) =>
+        member.fullName?.toLowerCase().includes(text.toLowerCase()),
+      ),
     );
     setFilteredChannels(filtered);
   };
@@ -101,7 +100,10 @@ const ChatMainScreen = () => {
     return (
       <Animated.View style={{ opacity }}>
         <TouchableOpacity
-          onPress={() => channel.channelId && handleDeleteChannel({ channelId: channel.channelId })}
+          onPress={() =>
+            channel.channelId &&
+            handleDeleteChannel({ channelId: channel.channelId })
+          }
           style={styles.deleteButton}
         >
           <Text style={styles.deleteText}>Delete</Text>
@@ -111,7 +113,7 @@ const ChatMainScreen = () => {
   };
 
   const getOtherUser = (members: any[]) => {
-    return members.find(item => item.uid !== user.uid);
+    return members.find((item) => item.uid !== user.uid);
   };
 
   const handleChatPress = (channel: any): void => {
@@ -148,29 +150,32 @@ const ChatMainScreen = () => {
               onPress={() => handleChatPress(channel)}
             >
               <Image
-                source={ getOtherUser(channel.members)?.avatarUrl
-                      ? {
-                          uri: getOtherUser(channel.members)?.avatarUrl,
-                        }
-                  : userAvatar
+                source={
+                  getOtherUser(channel.members)?.avatarUrl
+                    ? {
+                        uri: getOtherUser(channel.members)?.avatarUrl,
+                      }
+                    : userAvatar
                 }
                 style={styles.profileImage}
               />
               <View style={styles.chatContent}>
-                <Text style={styles.title}>{getOtherUser(channel.members).fullName || 'Chat'}</Text>
+                <Text style={styles.title}>
+                  {getOtherUser(channel.members).fullName || 'Chat'}
+                </Text>
                 <Text style={styles.lastMessage}>
                   {channel.lastMessageText
-                      ? channel.lastMessageText
-                      : 'No messages yet'}
+                    ? channel.lastMessageText
+                    : 'No messages yet'}
                 </Text>
               </View>
               <Text style={styles.time}>
                 {channel.lastMessageAt
-                    ? new Date(channel.lastMessageAt).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })
-                    : ''}
+                  ? new Date(channel.lastMessageAt).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : ''}
               </Text>
             </TouchableOpacity>
           </Swipeable>
