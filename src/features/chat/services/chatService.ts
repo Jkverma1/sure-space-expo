@@ -135,4 +135,92 @@ export const createChatChannel = async (
   }
 };
 
+export const getMessages = async (channelId: string) => {
+  try {
+    const channel = client?.channel('messaging', channelId);
+    await channel?.watch();
+    const response = await channel?.query({
+      messages: { limit: 50 },
+    });
+
+    return response?.messages;
+  } catch (error) {
+    console.log('Error fetching messages:', error);
+    return [];
+  }
+};
+
+export const sendMessage = async (
+  channelId: string,
+  userId: string,
+  messageText: string,
+) => {
+  try {
+    const channel = client?.channel('messaging', channelId);
+    await channel?.watch();
+    await channel?.sendMessage({
+      text: messageText,
+      user_id: userId,
+    });
+  } catch (error) {
+    console.log('Error sending message:', error);
+  }
+};
+
+export const listenForNewMessages = async (
+  channelId: string,
+  onNewMessage: any,
+) => {
+  try {
+    const channel = client?.channel('messaging', channelId);
+    await channel?.watch();
+
+    const handleNewMessage = (event: any) => {
+      if (event.message) {
+        onNewMessage(event.message);
+      }
+    };
+
+    channel?.on('message.new', handleNewMessage);
+    return () => {
+      channel?.off('message.new', handleNewMessage);
+    };
+  } catch (error) {
+    console.log('Error in listenForNewMessages:', error);
+    return () => {};
+  }
+};
+
+let channelRef: any = null;
+
+export const setChannelRef = (channel: any) => {
+  channelRef = channel;
+};
+
+export const sendTypingEvent = async () => {
+  if (channelRef) {
+    await channelRef.keystroke();
+  }
+};
+
+export const listenForTyping = (callback: (usersTyping: any[]) => void) => {
+  if (!channelRef) return;
+
+  const handleTypingStart = (event: any) => {
+    callback(event.typing.users);
+  };
+
+  const handleTypingStop = () => {
+    callback([]);
+  };
+
+  channelRef.on('typing.start', handleTypingStart);
+  channelRef.on('typing.stop', handleTypingStop);
+
+  return () => {
+    channelRef.off('typing.start', handleTypingStart);
+    channelRef.off('typing.stop', handleTypingStop);
+  };
+};
+
 export const getChatClient = () => client;

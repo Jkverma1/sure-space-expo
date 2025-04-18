@@ -5,6 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { back_ico, close_ico } from '@/src/constants';
 import { HeaderProps } from '../types/chat.types';
+import { setChannels } from '@/src/redux/slices/chatSlice';
+import { fetchChannels } from '../services/chatService';
+import { useDispatch } from 'react-redux';
 
 const Header: React.FC<HeaderProps> = ({
   title,
@@ -13,20 +16,31 @@ const Header: React.FC<HeaderProps> = ({
   enableClose = false,
   handleClose,
   showBack = true,
+  backScreen = '',
 }) => {
   const navigation = useNavigation();
   const displayedTitle =
     title.length > 15 ? `${title.substring(0, 15)}...` : title;
+  const dispatch = useDispatch();
+
+  const handleBack = async () => {
+    if (backScreen?.length > 0) {
+      const { channels, error } = await fetchChannels();
+      if (!error && channels) {
+        dispatch(setChannels({ channels }));
+      }
+      navigation.navigate(backScreen as never);
+    } else {
+      navigation.goBack();
+    }
+  };
 
   return (
     <SafeAreaView edges={['top']} style={{ backgroundColor: '#fff' }}>
       <View style={styles.container}>
         {/* Back Button */}
         {showBack && (
-          <TouchableOpacity
-            style={styles.back_btn}
-            onPress={() => navigation.goBack()}
-          >
+          <TouchableOpacity style={styles.back_btn} onPress={handleBack}>
             <Image source={back_ico} style={styles.icon} />
             <Text style={styles.back_btn_text}>Back</Text>
           </TouchableOpacity>

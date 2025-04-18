@@ -7,6 +7,7 @@ export interface HeaderProps {
   enableClose?: boolean;
   handleClose?: () => void;
   showBack?: boolean;
+  backScreen?: string;
 }
 
 export interface DeleteChannelResponse {
@@ -40,4 +41,11 @@ export interface User {
   id: string;
   fullName: string;
   avatarUrl?: string;
+}
+
+export interface Message {
+  id: string;
+  senderId: string | undefined;
+  text: string;
+  time: string;
 }
