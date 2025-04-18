@@ -12,7 +12,8 @@
       "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "1073724389439",
       "EXPO_PUBLIC_FIREBASE_APP_ID": "1:1073724389439:web:3aa8f5c481f5a09aa9a08a",
       "EXPO_FIREBASE_MEASUREMENT_ID": "G-2NBV905LZJ",
-      "EXPO_STREAM_CHAT_API_KEY": "u4t7pcggw6mp"
+      "EXPO_STREAM_CHAT_API_KEY": "u4t7pcggw6mp",
+      "EXPO_STREAM_CHAT_APP_ID": "1366284"
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

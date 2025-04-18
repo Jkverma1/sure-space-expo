@@ -29,7 +29,6 @@ export const loginUser = async (email: string, password: string) => {
         Authorization: `Bearer ${idToken}`,
       },
     });
-    console.log(response);
     if (response.data.code === 200)
       await AsyncStorage.setItem('token', idToken);
     return response.data;

@@ -45,8 +45,8 @@ const PersonalInformationScreen = () => {
       typeof inputDate === 'string'
         ? inputDate
         : inputDate instanceof Date
-        ? inputDate.toISOString()
-        : null;
+          ? inputDate.toISOString()
+          : null;
     if (dateString) {
       setFormData((prev: FormData) => ({
         ...prev,
@@ -59,33 +59,32 @@ const PersonalInformationScreen = () => {
     setFormData((prev: FormData) => ({ ...prev, [key]: text }));
   };
 
-const handleSave = async () => {
-  setIsLoading(true);
+  const handleSave = async () => {
+    setIsLoading(true);
 
-  try {
-    const payload = {
-      formData: {
-        fullName: formData.fullName,
-        birthday: formData.birthday,
-        phoneNumber: formData.phoneNumber,
-        userEmail: formData.userEmail,
-      },
-      avatarUrl: formData.avatarUrl,
-    };
+    try {
+      const payload = {
+        formData: {
+          fullName: formData.fullName,
+          birthday: formData.birthday,
+          phoneNumber: formData.phoneNumber,
+          userEmail: formData.userEmail,
+        },
+        avatarUrl: formData.avatarUrl,
+      };
 
-    await updateUserProfile(payload);
-    const token = await AsyncStorage.getItem('token');
-    if (token) {
-      dispatch(initializeApp(token));
+      await updateUserProfile(payload);
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        dispatch(initializeApp(token));
+      }
+      setEditMode(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } finally {
+      setIsLoading(false);
     }
-    setEditMode(false);
-  } catch (error) {
-    console.error('Error updating profile:', error);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+  };
 
   const renderInputField = (row: RowData): JSX.Element | null => {
     if (!editMode) return <Text style={styles.text}>{row.value}</Text>;

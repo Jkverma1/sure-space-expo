@@ -50,7 +50,7 @@ export default function ProfileMainScreen() {
       </View>
 
       <View style={styles.user_avatar}>
-        <Image style={styles.user_image} source={avatarSrc} />
+        <Image style={styles.user_image} source={user_image} />
         <Text style={styles.username}>{user?.fullName || 'User'}</Text>
       </View>
 

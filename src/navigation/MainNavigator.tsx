@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FeedScreen from '../screens/Feed/FeedScreen';
 import ChatScreen from '../screens/Chat/ChatScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { initActivityClient } from '../features/feed/services/feedService';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainNavigator() {
+  const user = useSelector((state: RootState) => state.user.user);
+    useEffect(() => {
+    const setupActivityFeed = async () => {
+      await initActivityClient(user);
+    };
+
+    setupActivityFeed();
+    }, []);
+
   return (
     <Tab.Navigator
       initialRouteName="Feed"

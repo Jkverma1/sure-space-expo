@@ -10,8 +10,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 import { CalendarModalProps } from '../types/settings.types';
 
-
-
 const CalendarModal: React.FC<CalendarModalProps> = ({
   visible,
   onClose,
@@ -50,7 +48,10 @@ const CalendarModal: React.FC<CalendarModalProps> = ({
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleConfirm} style={styles.confirmButton}>
+          <TouchableOpacity
+            onPress={handleConfirm}
+            style={styles.confirmButton}
+          >
             <Text style={styles.confirmText}>Confirm</Text>
           </TouchableOpacity>
         </View>

@@ -10,7 +10,6 @@ export const changePassword = async (newPassword: string) => {
 
   try {
     await updatePassword(currentUser, newPassword);
-    console.log('Password updated successfully');
   } catch (error: any) {
     if (error.code === 'auth/requires-recent-login') {
       console.log('User needs to re-authenticate');

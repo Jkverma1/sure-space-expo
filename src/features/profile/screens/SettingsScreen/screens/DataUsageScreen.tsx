@@ -36,13 +36,11 @@ const DataUsageScreen = () => {
   const handleDeleteData = async () => {
     // Placeholder for actual delete data logic
     setDeleteDataModalVisible(false);
-    console.log('User data deleted');
   };
 
   const handleDeleteAccount = async () => {
     await dispatch(logout());
     setDeleteAccountModalVisible(false);
-    console.log('Account deleted and logged out');
   };
 
   return (

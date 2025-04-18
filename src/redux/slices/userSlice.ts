@@ -6,7 +6,6 @@ import {
   logoutUser,
   registerUser,
 } from '@/src/api/auth';
-import { updateUserProfile } from '@/src/features/profile/screens/SettingsScreen/services/personalInformation';
 
 interface UserState {
   isAuthenticated: boolean;
