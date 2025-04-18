@@ -16,10 +16,6 @@ import {
   getMessages,
   sendMessage,
   listenForNewMessages,
-  sendTypingEvent,
-  listenForTyping,
-  setChannelRef,
-  fetchChannels,
 } from '../services/chatService';
 import { useRoute } from '@react-navigation/native';
 import { create_post_background } from '@/src/constants';
@@ -38,14 +34,11 @@ const ConversationScreen = () => {
   const [mentionSuggestions, setMentionSuggestions] = useState<
     { id: any; name: any }[]
   >([]);
-  const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
-    setChannelRef(channel);
 
     let unsubscribeMessages: (() => void) | undefined;
-    let unsubscribeTyping: (() => void) | undefined;
 
     const fetchMessages = async () => {
       try {
@@ -66,36 +59,25 @@ const ConversationScreen = () => {
 
     fetchMessages();
 
-    // Wrap the async call in an IIFE (Immediately Invoked Function Expression)
     (async () => {
-      const unsubscribe = await listenForNewMessages(
-        channelId,
-        (newMsg: any) => {
-          if (!newMsg?.text) return;
-          const formatted = {
-            id: newMsg.id,
-            senderId: newMsg.user?.id,
-            text: newMsg.text,
-            time: new Date(newMsg.created_at).toLocaleTimeString(),
-          };
+      const unsubscribe = await listenForNewMessages(channelId, (newMsg: any) => {
+        if (!newMsg?.text) return;
+        const formatted = {
+          id: newMsg.id,
+          senderId: newMsg.user?.id,
+          text: newMsg.text,
+          time: new Date(newMsg.created_at).toLocaleTimeString(),
+        };
 
-          setMessages((prev) =>
-            prev.some((msg) => msg.id === formatted.id)
-              ? prev
-              : [...prev, formatted],
-          );
-        },
-      );
+        setMessages((prev) =>
+          prev.some((msg) => msg.id === formatted.id)
+            ? prev
+            : [...prev, formatted],
+        );
+      });
 
-      unsubscribeMessages = unsubscribe; // Assign the synchronous unsubscribe function
+      unsubscribeMessages = unsubscribe;
     })();
-
-    unsubscribeTyping = listenForTyping((usersTyping) => {
-      const names = usersTyping
-        .filter((u) => u.id !== user.uid)
-        .map((u) => u.name || u.id);
-      setTypingUsers(names);
-    });
 
     const fetchUsers = async () => {
       try {
@@ -113,7 +95,6 @@ const ConversationScreen = () => {
 
     return () => {
       unsubscribeMessages?.();
-      unsubscribeTyping?.();
     };
   }, [channelId]);
 
@@ -130,7 +111,6 @@ const ConversationScreen = () => {
 
   const handleInputChange = (text: string) => {
     setNewMessage(text);
-    sendTypingEvent();
 
     const words = text.split(' ');
     const lastWord = words[words.length - 1];
@@ -182,13 +162,6 @@ const ConversationScreen = () => {
             })
           )}
         </ScrollView>
-
-        {typingUsers.length > 0 && (
-          <Text style={styles.typingText}>
-            {typingUsers.join(', ')} {typingUsers.length > 1 ? 'are' : 'is'}{' '}
-            typing...
-          </Text>
-        )}
 
         {mentionSuggestions.length > 0 && (
           <View style={styles.mentionContainer}>
@@ -333,12 +306,6 @@ const styles = StyleSheet.create({
   mentionText: {
     fontSize: 16,
     color: '#333',
-  },
-  typingText: {
-    paddingHorizontal: 16,
-    paddingBottom: 4,
-    fontSize: 14,
-    color: '#888',
   },
 });
 

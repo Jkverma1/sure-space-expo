@@ -191,36 +191,4 @@ export const listenForNewMessages = async (
   }
 };
 
-let channelRef: any = null;
-
-export const setChannelRef = (channel: any) => {
-  channelRef = channel;
-};
-
-export const sendTypingEvent = async () => {
-  if (channelRef) {
-    await channelRef.keystroke();
-  }
-};
-
-export const listenForTyping = (callback: (usersTyping: any[]) => void) => {
-  if (!channelRef) return;
-
-  const handleTypingStart = (event: any) => {
-    callback(event.typing.users);
-  };
-
-  const handleTypingStop = () => {
-    callback([]);
-  };
-
-  channelRef.on('typing.start', handleTypingStart);
-  channelRef.on('typing.stop', handleTypingStop);
-
-  return () => {
-    channelRef.off('typing.start', handleTypingStart);
-    channelRef.off('typing.stop', handleTypingStop);
-  };
-};
-
 export const getChatClient = () => client;
