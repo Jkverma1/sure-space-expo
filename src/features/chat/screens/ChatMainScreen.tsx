@@ -12,7 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../components/Header';
-import { search } from '@/src/constants';
+import { search, userAvatar } from '@/src/constants';
 import { fetchChannels, deleteChannel } from '../services/chatService';
 import { Channel, DefaultGenerics } from 'stream-chat';
 import { Swipeable } from 'react-native-gesture-handler';
@@ -28,7 +28,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 interface RenderRightActionsProps {
   progress: Animated.AnimatedInterpolation<number>;
   dragX: Animated.AnimatedInterpolation<number>;
-  channel: Channel<DefaultGenerics>;
+  channel: any;
 }
 
 type ChatScreenNavigationProp = NativeStackNavigationProp<
@@ -40,9 +40,10 @@ const ChatMainScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<ChatScreenNavigationProp>();
   const cachedChannels = useSelector((state: RootState) => state.chat.channels);
+  const user = useSelector((state: RootState) => state.user.user);
 
   const [filteredChannels, setFilteredChannels] = useState<
-    Channel<DefaultGenerics>[]
+    any[]
   >([]);
   const [searchText, setSearchText] = useState('');
 
@@ -51,7 +52,7 @@ const ChatMainScreen = () => {
       if (cachedChannels.length === 0) {
         const { channels, error } = await fetchChannels();
         if (!error && channels) {
-        dispatch(setChannels({ channels }));
+          dispatch(setChannels({ channels }));
           setFilteredChannels(channels);
         }
       } else {
@@ -65,8 +66,8 @@ const ChatMainScreen = () => {
   const handleSearch = (text: string) => {
     setSearchText(text);
     const filtered: Channel<DefaultGenerics>[] = cachedChannels.filter(
-      (channel: Channel<DefaultGenerics>) =>
-        channel.data?.name?.toLowerCase().includes(text.toLowerCase()),
+      (channel: any) =>
+        channel.members.fullName.toLowerCase().includes(text.toLowerCase()),
     );
     setFilteredChannels(filtered);
   };
@@ -75,9 +76,9 @@ const ChatMainScreen = () => {
     channel: HandleDeleteChannelProps,
   ): Promise<void> => {
     try {
-      await deleteChannel(channel.id);
+      await deleteChannel(channel.channelId);
       const updatedChannels = cachedChannels.filter(
-        (c: Channel<DefaultGenerics>) => c.id !== channel.id,
+        (c: any) => c.channelId !== channel.channelId,
       );
       dispatch(setChannels({ channels: updatedChannels }));
       setFilteredChannels(updatedChannels);
@@ -100,7 +101,7 @@ const ChatMainScreen = () => {
     return (
       <Animated.View style={{ opacity }}>
         <TouchableOpacity
-          onPress={() => channel.id && handleDeleteChannel({ id: channel.id })}
+          onPress={() => channel.channelId && handleDeleteChannel({ channelId: channel.channelId })}
           style={styles.deleteButton}
         >
           <Text style={styles.deleteText}>Delete</Text>
@@ -109,21 +110,15 @@ const ChatMainScreen = () => {
     );
   };
 
-  interface HandleChatPressProps {
-    id: string;
-    data: {
-      name?: string;
-    };
-    state: {
-      members: Record<string, unknown>;
-    };
-  }
+  const getOtherUser = (members: any[]) => {
+    return members.find(item => item.uid !== user.uid);
+  };
 
   const handleChatPress = (channel: any): void => {
     navigation.navigate('ConversationScreen', {
-      channelId: channel.id,
-      channelName: channel.data.name,
-      channelMembers: channel.state.members,
+      channelId: channel.channelId,
+      channelName: getOtherUser(channel.members).fullName,
+      channelMembers: channel.members,
     });
   };
 
@@ -143,7 +138,7 @@ const ChatMainScreen = () => {
       <ScrollView style={styles.chatContainer}>
         {filteredChannels.map((channel) => (
           <Swipeable
-            key={channel.id}
+            key={channel.channelId}
             renderRightActions={(progress, dragX) =>
               renderRightActions(progress, dragX, channel)
             }
@@ -153,33 +148,29 @@ const ChatMainScreen = () => {
               onPress={() => handleChatPress(channel)}
             >
               <Image
-                source={{
-                  uri:
-                    channel.data?.created_by &&
-                    typeof channel.data.created_by === 'object' &&
-                    'image' in channel.data.created_by
-                      ? String(channel.data.created_by.image)
-                      : 'https://your-default-avatar.com/avatar.png',
-                }}
+                source={ getOtherUser(channel.members)?.avatarUrl
+                      ? {
+                          uri: getOtherUser(channel.members)?.avatarUrl,
+                        }
+                  : userAvatar
+                }
                 style={styles.profileImage}
               />
               <View style={styles.chatContent}>
-                <Text style={styles.title}>{channel.data?.name ?? 'Chat'}</Text>
+                <Text style={styles.title}>{getOtherUser(channel.members).fullName || 'Chat'}</Text>
                 <Text style={styles.lastMessage}>
-                  {channel.state.messages.length > 0
-                    ? channel.state.messages[channel.state.messages.length - 1]
-                        .text
-                    : 'No messages yet'}
+                  {channel.lastMessageText
+                      ? channel.lastMessageText
+                      : 'No messages yet'}
                 </Text>
               </View>
               <Text style={styles.time}>
-                {channel.state.messages.length > 0
-                  ? new Date(
-                      channel.state.messages[
-                        channel.state.messages.length - 1
-                      ].created_at,
-                    ).toLocaleTimeString()
-                  : ''}
+                {channel.lastMessageAt
+                    ? new Date(channel.lastMessageAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : ''}
               </Text>
             </TouchableOpacity>
           </Swipeable>

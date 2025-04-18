@@ -12,13 +12,13 @@ const Tab = createBottomTabNavigator();
 
 export default function MainNavigator() {
   const user = useSelector((state: RootState) => state.user.user);
-    useEffect(() => {
+  useEffect(() => {
     const setupActivityFeed = async () => {
       await initActivityClient(user);
     };
 
     setupActivityFeed();
-    }, []);
+  }, []);
 
   return (
     <Tab.Navigator

@@ -57,7 +57,7 @@ export interface ImagePickerProps {
   formData: { avatarUrl: { uri: string } };
 }
 
-export interface FormData {
+export interface FormDataType {
   avatarUrl: any;
   fullName: string;
   birthday: string;
@@ -73,13 +73,13 @@ export interface Country {
 export interface RowData {
   text: string;
   value: string;
-  key: keyof FormData;
+  key: keyof FormDataType;
 }
 
 export interface DataRow {
   text: string;
   value: string;
-  key: keyof FormData;
+  key: keyof FormDataType;
 }
 
 export interface ApiFormData {
@@ -87,9 +87,4 @@ export interface ApiFormData {
   birthday: string;
   phoneNumber: string;
   userEmail: string;
-}
-
-export interface UpdateUserProfilePayload {
-  formData: ApiFormData;
-  avatarUrl: string;
 }

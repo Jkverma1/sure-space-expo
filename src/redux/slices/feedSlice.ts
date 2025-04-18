@@ -24,16 +24,16 @@ export const loadFollowersAndFollowing = createAsyncThunk(
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message);
     }
-  }
+  },
 );
 
 const feedSlice = createSlice({
   name: 'feed',
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(loadFollowersAndFollowing.pending, state => {
+      .addCase(loadFollowersAndFollowing.pending, (state) => {
         state.loading = true;
         state.error = null;
       })

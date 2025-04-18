@@ -26,8 +26,8 @@ type ChatScreenNavigationProp = NativeStackNavigationProp<
 
 const NewChatScreen = () => {
   const user = useSelector((state: any) => state.user.user);
-  const {followers, following} = useSelector(
-    (state: any) => state.user.user?.followers || []
+  const { followers, following } = useSelector(
+    (state: any) => state.user.user?.followers || [],
   );
   const navigation = useNavigation<ChatScreenNavigationProp>();
   const [users, setUsers] = useState<User[]>([]);
@@ -35,13 +35,16 @@ const NewChatScreen = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const allUsers = [...followers?.followers||[], ...following?.following||[]];
+    const allUsers = [
+      ...(followers?.followers || []),
+      ...(following?.following || []),
+    ];
     const uniqueUsers = Array.from(
       new Map(
         allUsers
           .filter((u) => u?.uid && u.uid !== user?.uid)
-          .map((u) => [u.uid, u])
-      ).values()
+          .map((u) => [u.uid, u]),
+      ).values(),
     );
     setUsers(uniqueUsers);
   }, [user?.uid]); // fixed dependency array
@@ -58,7 +61,7 @@ const NewChatScreen = () => {
         channelId,
         members,
         user,
-        selectedUser
+        selectedUser,
       );
       if (channel) {
         await channel.updatePartial({
@@ -94,7 +97,9 @@ const NewChatScreen = () => {
                   onPress={() => handleCreateChat(item)}
                 >
                   <Image
-                    source={item.avatarUrl ? { uri: item.avatarUrl } : userAvatar}
+                    source={
+                      item.avatarUrl ? { uri: item.avatarUrl } : userAvatar
+                    }
                     style={styles.avatar}
                   />
                   <Text style={styles.userName}>{item.fullName}</Text>

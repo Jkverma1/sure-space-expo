@@ -15,7 +15,7 @@ import {
 import CalendarModal from '../components/CalendarModal';
 import Header from '../../../components/Header';
 import ImagePicker from '../components/ImagePicker';
-import { DataRow, FormData, RowData } from '../types/settings.types';
+import { DataRow, FormDataType, RowData } from '../types/settings.types';
 import { calender_ico, user_image } from '@/src/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserProfile } from '../services/personalInformation';
@@ -29,9 +29,12 @@ const PersonalInformationScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state: any) => state.user.user);
   const dispatch = useDispatch<AppDispatch>();
-
+  const avatarSrc =
+    user?.avatarUrl && user.avatarUrl !== ''
+      ? { uri: user.avatarUrl }
+      : user_image;
   const [formData, setFormData] = useState({
-    avatarUrl: user_image,
+    avatarUrl: avatarSrc,
     fullName: user?.fullName,
     birthday: user?.birthday,
     phoneNumber: user?.phoneNumber,
@@ -48,32 +51,41 @@ const PersonalInformationScreen = () => {
           ? inputDate.toISOString()
           : null;
     if (dateString) {
-      setFormData((prev: FormData) => ({
+      setFormData((prev: FormDataType) => ({
         ...prev,
         birthday: dateString.substring(0, 10),
       }));
     }
   };
 
-  const handleChange = (text: string, key: keyof FormData): void => {
-    setFormData((prev: FormData) => ({ ...prev, [key]: text }));
+  const handleChange = (text: string, key: keyof FormDataType): void => {
+    setFormData((prev: FormDataType) => ({ ...prev, [key]: text }));
   };
 
   const handleSave = async () => {
     setIsLoading(true);
-
     try {
-      const payload = {
-        formData: {
-          fullName: formData.fullName,
-          birthday: formData.birthday,
-          phoneNumber: formData.phoneNumber,
-          userEmail: formData.userEmail,
-        },
-        avatarUrl: formData.avatarUrl,
-      };
-
-      await updateUserProfile(payload);
+      const form = new FormData();
+      console.log('Form Data:');
+      form.append('fullName', formData.fullName);
+      form.append('birthday', formData.birthday);
+      form.append('phoneNumber', formData.phoneNumber);
+      form.append('userEmail', formData.userEmail);
+      if (
+        formData.avatarUrl &&
+        typeof formData.avatarUrl === 'object' &&
+        formData.avatarUrl.uri &&
+        formData.avatarUrl.uri.startsWith('file://')
+      ) {
+        const fileName = formData.avatarUrl.uri.split('/').pop();
+        const fileType = fileName.split('.').pop();
+        form.append('avatar', {
+          uri: formData.avatarUrl.uri,
+          name: fileName,
+          type: `image/${fileType}`,
+        } as unknown as File);
+      }
+      await updateUserProfile(form);
       const token = await AsyncStorage.getItem('token');
       if (token) {
         dispatch(initializeApp(token));

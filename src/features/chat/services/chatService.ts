@@ -82,15 +82,14 @@ export const fetchChannels = async (): Promise<{
       );
     }
 
-    const filters = { type: 'messaging', members: { $in: [client.userID] } };
-    const sort: ChannelSort = { last_message_at: -1 };
-
-    const channels = await client.queryChannels(filters, sort, {
-      watch: true,
-      state: true,
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get('/chat/channels', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
-
-    return { channels, error: null };
+    return { channels: response.data.data, error: null };
   } catch (error) {
     console.error('Error fetching channels:', error);
     return { channels: [], error };

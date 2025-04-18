@@ -1,35 +1,23 @@
-import axiosInstance from '@/src/types/axios';
-import { UpdateUserProfilePayload } from '../types/settings.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
-export const updateUserProfile = async (
-  userData: UpdateUserProfilePayload,
-): Promise<any> => {
-  try {
-    const token = await AsyncStorage.getItem('token');
-    const response = await axiosInstance.put(
-      '/user/updateprofile',
-      {
-        userData: {
-          formData: userData.formData,
-          avatarUrl: userData.avatarUrl,
-        },
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 10000,
-      },
-    );
+export const updateUserProfile = async (formData: FormData): Promise<any> => {
+  const token = await AsyncStorage.getItem('token');
 
-    return response.data;
-  } catch (error: any) {
-    console.error(
-      'Failed to update profile:',
-      error?.response || error.message,
-    );
-    throw error;
+  const response = await fetch(
+    `${Constants.expoConfig?.extra?.HOST_URL}/user/updateprofile`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+
+  return response.json();
 };

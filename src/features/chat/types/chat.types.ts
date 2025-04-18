@@ -15,7 +15,7 @@ export interface DeleteChannelResponse {
 }
 
 export interface HandleDeleteChannelProps {
-  id: string;
+  channelId: string;
 }
 
 export interface ChatStackParamList extends ParamListBase {

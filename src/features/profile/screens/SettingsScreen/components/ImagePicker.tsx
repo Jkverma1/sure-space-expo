@@ -1,26 +1,94 @@
-import React, { useState } from 'react';
-import { View, Image, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Image,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
+import * as ImagePickerLib from 'expo-image-picker';
 import { ImagePickerProps } from '../types/settings.types';
 import { mdi_camera } from '@/src/constants';
 
 const ImagePicker: React.FC<ImagePickerProps> = ({ setFormData, formData }) => {
   const [imageUri, setImageUri] = useState(formData.avatarUrl);
 
-  const handleSelectImage = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
-      if (response.didCancel) {
-        Alert.alert('User cancelled image picker');
-      } else if (response.errorCode) {
-        Alert.alert('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const mediaStatus =
+          await ImagePickerLib.requestMediaLibraryPermissionsAsync();
+        const cameraStatus =
+          await ImagePickerLib.requestCameraPermissionsAsync();
+
+        if (
+          mediaStatus.status !== 'granted' ||
+          cameraStatus.status !== 'granted'
+        ) {
+          Alert.alert(
+            'Permissions Required',
+            'Camera and media library access are needed.',
+          );
+        }
+      }
+    })();
+  }, []);
+
+  const handleImagePick = async () => {
+    Alert.alert(
+      'Update Profile Picture',
+      'Choose an option',
+      [
+        { text: 'Take Photo', onPress: openCamera },
+        { text: 'Choose from Library', onPress: openGallery },
+        { text: 'Cancel', style: 'cancel' },
+      ],
+      { cancelable: true },
+    );
+  };
+
+  const openGallery = async () => {
+    try {
+      const result = await ImagePickerLib.launchImageLibraryAsync({
+        mediaTypes: ImagePickerLib.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        const uri = result.assets[0].uri;
+        setImageUri({ uri });
         setFormData({
           ...formData,
-          avatarUrl: { uri: response.assets[0].uri || '' },
+          avatarUrl: { uri },
         });
-        setImageUri({ uri: response.assets[0].uri ?? '' });
       }
-    });
+    } catch (error) {
+      Alert.alert('Error', 'Could not open image library.');
+    }
+  };
+
+  const openCamera = async () => {
+    try {
+      const result = await ImagePickerLib.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled) {
+        const uri = result.assets[0].uri;
+        setImageUri({ uri });
+        setFormData({
+          ...formData,
+          avatarUrl: { uri },
+        });
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Could not open camera.');
+    }
   };
 
   return (
@@ -28,10 +96,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ setFormData, formData }) => {
       {imageUri && (
         <View style={styles.editableAvatar}>
           <Image source={imageUri} style={styles.image} />
-          <TouchableOpacity
-            style={styles.cameraIcon}
-            onPress={handleSelectImage}
-          >
+          <TouchableOpacity style={styles.cameraIcon} onPress={handleImagePick}>
             <Image source={mdi_camera} style={styles.cameraImage} />
           </TouchableOpacity>
         </View>
@@ -42,7 +107,6 @@ const ImagePicker: React.FC<ImagePickerProps> = ({ setFormData, formData }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -68,10 +132,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,

@@ -30,24 +30,28 @@ export const initActivityClient = async (user: any) => {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
           },
-        }
+        },
       );
       token = response.data.token;
 
-      const expiration = new Date(Date.now() + 60 * 60 * 1000); 
+      const expiration = new Date(Date.now() + 60 * 60 * 1000);
       if (token) {
         await AsyncStorage.setItem('stream_token', token);
       } else {
         throw new Error('Token is null or undefined');
       }
-      await AsyncStorage.setItem('stream_token_expiry', expiration.toISOString());
+      await AsyncStorage.setItem(
+        'stream_token_expiry',
+        expiration.toISOString(),
+      );
     }
 
     activityClient = new StreamClient(API_KEY, token, APP_ID);
     await activityClient.setUser({
       id: user.uid,
       name: user.fullName,
-      image: user.avatarUrl || `https://getstream.io/random_avatar/${user.uid}.png`,
+      image:
+        user.avatarUrl || `https://getstream.io/random_avatar/${user.uid}.png`,
       token: token,
     });
     return activityClient;
@@ -64,11 +68,11 @@ export const fetchFollowersAndFollowing = async (userId: string) => {
 
   const [followersRes, followingRes] = await Promise.all([
     notificationFeed.followers(),
-    notificationFeed.following()
+    notificationFeed.following(),
   ]);
 
   return {
-    followers: followersRes.results.map(f => f.feed_id.split(':')[1]),
-    following: followingRes.results.map(f => f.target_id.split(':')[1]),
+    followers: followersRes.results.map((f) => f.feed_id.split(':')[1]),
+    following: followingRes.results.map((f) => f.target_id.split(':')[1]),
   };
 };
