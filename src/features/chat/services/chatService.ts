@@ -191,4 +191,14 @@ export const listenForNewMessages = async (
   }
 };
 
+export const fetchAllUsers = async () => {
+  try {
+    const response = await client?.queryUsers({}, { name: 1 }, { limit: 100 });
+    return response?.users;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return [];
+  }
+};
+
 export const getChatClient = () => client;

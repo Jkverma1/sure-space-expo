@@ -1,78 +1,195 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StreamClient } from 'getstream';
-import Constants from 'expo-constants';
 import axiosInstance from '@/src/types/axios';
 
-let activityClient: StreamClient;
-
-export const initActivityClient = async (user: any) => {
+export const fetchFollowers = async (userId: string) => {
   try {
-    const API_KEY = Constants.expoConfig?.extra?.EXPO_STREAM_CHAT_API_KEY;
-    const APP_ID = Constants.expoConfig?.extra?.EXPO_STREAM_CHAT_APP_ID;
-
-    if (activityClient && activityClient.userId) return activityClient;
-
-    const expiresAt = await AsyncStorage.getItem('stream_token_expiry');
-    const cachedToken = await AsyncStorage.getItem('stream_token');
-
-    const isValidToken =
-      cachedToken && expiresAt && new Date(expiresAt).getTime() > Date.now();
-
-    let token = cachedToken;
-
-    if (!isValidToken) {
-      const accessToken = await AsyncStorage.getItem('token');
-      const response = await axiosInstance.post(
-        '/chat/get-token',
-        { uid: user.uid },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/followers/${userId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-      );
-      token = response.data.token;
-
-      const expiration = new Date(Date.now() + 60 * 60 * 1000);
-      if (token) {
-        await AsyncStorage.setItem('stream_token', token);
-      } else {
-        throw new Error('Token is null or undefined');
-      }
-      await AsyncStorage.setItem(
-        'stream_token_expiry',
-        expiration.toISOString(),
-      );
-    }
-
-    activityClient = new StreamClient(API_KEY, token, APP_ID);
-    await activityClient.setUser({
-      id: user.uid,
-      name: user.fullName,
-      image:
-        user.avatarUrl || `https://getstream.io/random_avatar/${user.uid}.png`,
-      token: token,
-    });
-    return activityClient;
+      },
+    );
+    return response.data.data;
   } catch (error) {
-    console.error('❌ Error initializing activity client:', error);
-    return null;
+    console.log('Error fetching followers:', error);
   }
 };
 
-export const fetchFollowersAndFollowing = async (userId: string) => {
-  if (!activityClient) throw new Error('Activity client not initialized');
+export const fetchFollowing = async (userId: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/following/${userId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log('Error fetching following:', error);
+  }
+};
 
-  const notificationFeed = activityClient.feed('notification', userId);
+export const fetchForYouPosts = async () => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/global-feed`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log('Error liking post:', error);
+  }
+};
 
-  const [followersRes, followingRes] = await Promise.all([
-    notificationFeed.followers(),
-    notificationFeed.following(),
-  ]);
+export const likePost = async (postId: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.post(
+      `/stream/activity-feeds/like`,
+      {
+        activityId: postId,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error liking post:', error);
+  }
+};
 
-  return {
-    followers: followersRes.results.map((f) => f.feed_id.split(':')[1]),
-    following: followingRes.results.map((f) => f.target_id.split(':')[1]),
+export const unlikePost = async (postId: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.delete(
+      `/stream/activity-feeds/unlike`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          activityId: postId,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error unliking post:', error);
+  }
+};
+
+export const deletePost = async (postId: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.delete(
+      `/stream/activity-feeds/delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          activityId: postId,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error deleting post:', error);
+  }
+};
+
+export const reportPost = async (
+  userId: string,
+  postId: string,
+  reason: string,
+  comment?: string,
+) => {
+  try {
+    const requestBody = {
+      reporter_id: userId,
+      entity_type: 'post',
+      entity_id: postId,
+      reason: reason,
+      comment: '',
+    };
+    if (reason === 'other' && comment) {
+      requestBody.comment = comment;
+    }
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.post(`/reports`, requestBody, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log('Error reporting post:', error);
+  }
+};
+
+export const fetchComments = async (postId: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/comments/${postId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log('Error fetching comments:', error);
+  }
+};
+
+export const addCommentToPost = async (
+  postId: string,
+  parentId: string,
+  comment: string,
+) => {
+  const requestBody = {
+    activityId: postId,
+    user_id: parentId,
+    text: comment,
   };
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.post(
+      `/stream/activity-feeds/comments/add`,
+      requestBody,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log('Error adding comment:', error);
+  }
 };

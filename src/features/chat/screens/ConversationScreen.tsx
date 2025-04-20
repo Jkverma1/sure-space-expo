@@ -37,7 +37,6 @@ const ConversationScreen = () => {
   const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
-
     let unsubscribeMessages: (() => void) | undefined;
 
     const fetchMessages = async () => {
@@ -60,21 +59,24 @@ const ConversationScreen = () => {
     fetchMessages();
 
     (async () => {
-      const unsubscribe = await listenForNewMessages(channelId, (newMsg: any) => {
-        if (!newMsg?.text) return;
-        const formatted = {
-          id: newMsg.id,
-          senderId: newMsg.user?.id,
-          text: newMsg.text,
-          time: new Date(newMsg.created_at).toLocaleTimeString(),
-        };
+      const unsubscribe = await listenForNewMessages(
+        channelId,
+        (newMsg: any) => {
+          if (!newMsg?.text) return;
+          const formatted = {
+            id: newMsg.id,
+            senderId: newMsg.user?.id,
+            text: newMsg.text,
+            time: new Date(newMsg.created_at).toLocaleTimeString(),
+          };
 
-        setMessages((prev) =>
-          prev.some((msg) => msg.id === formatted.id)
-            ? prev
-            : [...prev, formatted],
-        );
-      });
+          setMessages((prev) =>
+            prev.some((msg) => msg.id === formatted.id)
+              ? prev
+              : [...prev, formatted],
+          );
+        },
+      );
 
       unsubscribeMessages = unsubscribe;
     })();
