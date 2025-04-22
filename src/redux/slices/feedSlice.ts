@@ -22,7 +22,7 @@ interface Comment {
   };
   data: {
     text: string;
-    name?: string; 
+    name?: string;
   };
   created_at: string;
 }
@@ -149,7 +149,11 @@ export const addComment = createAsyncThunk(
     thunkAPI,
   ) => {
     try {
-      const response = await addCommentToPost(postId, parentId, comment?.data?.text || '');
+      const response = await addCommentToPost(
+        postId,
+        parentId,
+        comment?.data?.text || '',
+      );
       return { postId, comment: comment };
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message);

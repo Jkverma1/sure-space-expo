@@ -114,3 +114,5 @@ export const report_ico = require('../../assets/icons/report_ico.png');
 export const trash_ico = require('../../assets/icons/delete_icon.png');
 export const right_edge = require('../../assets/icons/Chatbot/right_edge.png');
 export const left_edge = require('../../assets/icons/Chatbot/left_edge.png');
+export const block_ico = require('../../assets/icons/block_ico.png');
+export const followIcon = require('../../assets/icons/follow.png');

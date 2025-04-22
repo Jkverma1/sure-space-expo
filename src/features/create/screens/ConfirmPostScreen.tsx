@@ -30,6 +30,11 @@ type NavigationProp = NativeStackNavigationProp<
   'ConfirmPostScreen'
 >;
 
+interface ImageSize {
+  width: number;
+  height: number;
+}
+
 const ConfirmPostScreen = () => {
   const route =
     useRoute<RouteProp<{ params: ConfirmPostScreenRouteParams }, 'params'>>();
@@ -55,14 +60,39 @@ const ConfirmPostScreen = () => {
     fetchUsers();
   }, []);
 
-  const compressImage = async (uri: string): Promise<string> => {
-    const result: ImageManipulator.ImageResult =
-      await ImageManipulator.manipulateAsync(
+  const getImageSize = (uri: string): Promise<ImageSize> => {
+    return new Promise((resolve, reject) => {
+      Image.getSize(
         uri,
-        [{ resize: { width: 1000 } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG },
+        (width, height) => resolve({ width, height }),
+        (error) => reject(error),
       );
-    return result.uri;
+    });
+  };
+
+  const compressImage = async (uri: string): Promise<string> => {
+    try {
+      const maxDimension = 1080;
+
+      const { width, height } = await getImageSize(uri);
+      const scale = maxDimension / Math.max(width, height);
+      const newWidth = Math.floor(width * scale);
+      const newHeight = Math.floor(height * scale);
+
+      const manipResult = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: newWidth, height: newHeight } }],
+        {
+          compress: 0.8,
+          format: ImageManipulator.SaveFormat.JPEG,
+        },
+      );
+
+      return manipResult.uri;
+    } catch (error) {
+      console.log('Error compressing image:', error);
+      return uri;
+    }
   };
 
   const handlePost = async () => {

@@ -1,21 +1,31 @@
-import axiosInstance from '@/src/types/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
 export const savePost = async (formData: FormData) => {
   try {
     const token = await AsyncStorage.getItem('token');
-    const response = await axiosInstance.post(
-      `stream/activity-feeds/add`,
-      formData,
+
+    const response = await fetch(
+      `${Constants.expoConfig?.extra?.HOST_URL}/stream/activity-feeds/add`,
       {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        body: formData,
       },
     );
-    return response.data;
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log('Upload failed:', errorData);
+      throw new Error(errorData.message || 'Failed to save post');
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error: any) {
-    console.log('Error saving comic:', error);
-    return error.response ? error.response.data : error.message;
+    console.log('Error saving post:', error);
+    return error.message;
   }
 };

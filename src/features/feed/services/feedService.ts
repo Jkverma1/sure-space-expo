@@ -51,7 +51,25 @@ export const fetchForYouPosts = async () => {
     );
     return response.data.data;
   } catch (error) {
-    console.log('Error liking post:', error);
+    console.log('Error fetching other post:', error);
+  }
+};
+
+export const fetchMyPosts = async (userId: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/user-feed/${userId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log('Error fetching post:', error);
   }
 };
 

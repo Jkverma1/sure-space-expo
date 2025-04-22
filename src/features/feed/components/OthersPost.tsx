@@ -11,16 +11,23 @@ import {
 } from '@/src/constants';
 import { ResizeMode } from 'expo-av';
 import { useDispatch, useSelector } from 'react-redux';
-import { Post } from '../types/feed.types';
+import { FeedStackParamList, Post } from '../types/feed.types';
 import { toggleLike } from '@/src/redux/slices/feedSlice';
 import { AppDispatch } from '@/src/redux/store';
 import { sharePost } from '@/src/utils/functions';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface OthersPostProps {
   post: Post;
   onOpenComments: (post: Post) => void;
   onOpenReport: (post: Post) => void;
 }
+
+type NavigationProp = NativeStackNavigationProp<
+  FeedStackParamList,
+  'FeedScreen'
+>;
 
 const OthersPost: React.FC<OthersPostProps> = ({
   post,
@@ -32,7 +39,7 @@ const OthersPost: React.FC<OthersPostProps> = ({
     post.likes.some((like: any) => like.user.uid === user.uid),
   );
   const dispatch = useDispatch<AppDispatch>();
-
+  const navigation = useNavigation<NavigationProp>();
   interface HandleLikeParams {
     postId: string;
   }
@@ -49,7 +56,9 @@ const OthersPost: React.FC<OthersPostProps> = ({
       message: `Take a look at this amazing post by ${post.user.fullName}!`,
     });
   };
-  const showProfile = () => console.log('Navigate to profile');
+  const showProfile = () => {
+    navigation.navigate('UserProfileScreen', { userId: post.actor.uid });
+  };
 
   return (
     <View style={styles.postContainer}>

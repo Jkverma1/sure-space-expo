@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import React from 'react';
 import { left_edge, userAvatar } from '@/src/constants';
 
@@ -13,7 +13,10 @@ const OtherUserComment = ({
 }) => {
   return (
     <View style={styles.container}>
-      <Image source={avatar? {uri: avatar}: userAvatar} style={styles.avatar} />
+      <Image
+        source={avatar ? { uri: avatar } : userAvatar}
+        style={styles.avatar}
+      />
       <View style={styles.commentContainer}>
         <Text style={styles.userName}>{userName}</Text>
         <Text style={styles.commentText}>{comment}</Text>
@@ -32,7 +35,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
