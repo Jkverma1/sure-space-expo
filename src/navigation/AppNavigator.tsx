@@ -9,6 +9,9 @@ import { ActivityIndicator, View } from 'react-native';
 
 export default function AppNavigator() {
   const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated, isInitializing } = useSelector(
+    (state: RootState) => state.user,
+  );
   useEffect(() => {
     const initialize = async () => {
       const token = await AsyncStorage.getItem('token');
@@ -19,10 +22,7 @@ export default function AppNavigator() {
       }
     };
     initialize();
-  }, []);
-  const { isAuthenticated, isInitializing } = useSelector(
-    (state: RootState) => state.user,
-  );
+  }, [isInitializing]);
 
   if (isInitializing) {
     return (

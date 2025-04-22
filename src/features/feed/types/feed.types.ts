@@ -57,6 +57,7 @@ export interface FeedStackParamList {
   FeedScreen: undefined;
   UserProfileScreen: { userId: string };
   [key: string]: object | undefined;
+  CompletePostScreen: { item: string };
 }
 
 interface FollowerResponse {

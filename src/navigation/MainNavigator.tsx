@@ -1,12 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Image, View, StyleSheet } from 'react-native';
 import FeedScreen from '../screens/Feed/FeedScreen';
 import ChatScreen from '../screens/Chat/ChatScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import CreateScreen from '../screens/Create/CreateScreen';
-import { Ionicons } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import {
+  add_comic,
+  add_comic_click,
+  chat,
+  chat_click,
+  community,
+  community_click,
+  profile,
+  profile_click,
+} from '@/src/constants';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,25 +24,36 @@ export default function MainNavigator() {
       initialRouteName="Community"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap = 'home-outline';
-
+        tabBarStyle: styles.tabBar,
+        tabBarItemStyle: styles.tabBarItem, 
+        tabBarLabelStyle: styles.tabBarLabel, 
+        tabBarIcon: ({ focused }) => {
+          let iconSource;
           switch (route.name) {
             case 'Chat':
-              iconName = focused ? 'chatbubble' : 'chatbubble-outline';
+              iconSource = focused ? chat_click : chat;
               break;
             case 'Community':
-              iconName = focused ? 'home' : 'home-outline';
+              iconSource = focused ? community_click : community;
               break;
             case 'Create':
-              iconName = focused ? 'add-circle' : 'add-circle-outline';
+              iconSource = focused ? add_comic_click : add_comic;
               break;
             case 'Profile':
-              iconName = focused ? 'person' : 'person-outline';
+              iconSource = focused ? profile_click : profile;
               break;
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return (
+            <Image
+              source={iconSource}
+              style={{
+                height: focused ? 40 : 32,
+                resizeMode: 'contain',
+                marginBottom: 10, 
+              }}
+            />
+          );
         },
         tabBarActiveTintColor: '#F08080',
         tabBarInactiveTintColor: 'gray',
@@ -47,3 +66,22 @@ export default function MainNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    paddingVertical: 10, 
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    position: 'absolute',
+    backgroundColor: '#fff',
+    height: 100,
+    overflow: 'hidden',
+  },
+  tabBarItem: {
+    paddingVertical: 16,
+  },
+  tabBarLabel: {
+    fontSize: 12, 
+    marginTop: 5, 
+  },
+});

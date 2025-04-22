@@ -1,4 +1,7 @@
-import { fetchMyPosts } from '@/src/features/feed/services/feedService';
+import {
+  addCommentToPost,
+  fetchMyPosts,
+} from '@/src/features/feed/services/feedService';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserSummary {
@@ -21,12 +24,45 @@ const initialState: MyProfileState = {
   loading: false,
 };
 
+interface Comment {
+  id: string;
+  user: {
+    id: string;
+    uid?: string | undefined;
+    fullName: string;
+    avatarUrl: string | null;
+  };
+  data: {
+    text: string;
+    name?: string;
+  };
+  created_at: string;
+}
+
 export const loadMyPosts = createAsyncThunk(
   'myProfile/loadMyPosts',
   async (userId: string, thunkAPI) => {
     try {
       const posts = await fetchMyPosts(userId);
       return posts || [];
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
+export const addCommentToMyPost = createAsyncThunk(
+  'feed/addComment',
+  async (
+    {
+      postId,
+      parentId,
+      comment,
+    }: { postId: string; parentId: string; comment: Comment },
+    thunkAPI,
+  ) => {
+    try {
+      return { postId, comment: comment };
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message);
     }
@@ -65,6 +101,27 @@ const myProfileSlice = createSlice({
       .addCase(loadMyPosts.rejected, (state) => {
         state.loading = false;
       });
+    builder.addCase(addCommentToMyPost.fulfilled, (state, action) => {
+      const { postId, comment } = action.payload;
+      const post = state.myPosts?.find((p) => p.id === postId);
+      if (post) {
+        post.comments = [
+          ...post.comments,
+          {
+            ...comment,
+            data: {
+              ...comment.data,
+              text: comment.data.text || '',
+              name: comment.data.name || 'Anonymous',
+            },
+            user: {
+              ...comment.user,
+              uid: comment.user.uid || '',
+            },
+          },
+        ];
+      }
+    });
   },
 });
 

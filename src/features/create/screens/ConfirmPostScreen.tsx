@@ -72,7 +72,7 @@ const ConfirmPostScreen = () => {
 
   const compressImage = async (uri: string): Promise<string> => {
     try {
-      const maxDimension = 1080;
+      const maxDimension = 512;
 
       const { width, height } = await getImageSize(uri);
       const scale = maxDimension / Math.max(width, height);

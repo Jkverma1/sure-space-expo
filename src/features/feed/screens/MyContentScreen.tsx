@@ -8,12 +8,15 @@ import {
   ScrollView,
   ActivityIndicator,
   FlatList,
+  TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import ProfileHeader from '../components/ProfileHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import FollowStats from '../components/FollowStats';
 import { AppDispatch, RootState } from '@/src/redux/store';
 import {
+  FeedStackParamList,
   fetchAndCacheFollowers,
   fetchAndCacheFollowing,
   Post,
@@ -23,6 +26,15 @@ import OthersPost from '../components/OthersPost';
 import ReportPostSheet from '../components/ReportPostSheet';
 import CommentSheet from '../components/CommentSheet';
 import { loadMyPosts } from '@/src/redux/slices/myProfileSlice';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+const screenWidth = Dimensions.get('window').width;
+
+type NavigationProp = NativeStackNavigationProp<
+  FeedStackParamList,
+  'feedScreen'
+>;
 
 const MyContentScreen = () => {
   const [activeTab, setActiveTab] = useState<'Posts' | 'Grid'>('Posts');
@@ -31,6 +43,7 @@ const MyContentScreen = () => {
   const [showReport, setShowReport] = useState(false);
   const loading = useSelector((state: RootState) => state.myProfile.loading);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const navigation = useNavigation<NavigationProp>();
   const posts = useSelector(
     (state: RootState) => state.myProfile.myPosts,
   ) as Post[];
@@ -66,6 +79,27 @@ const MyContentScreen = () => {
   const handleOpenReport = (post: Post) => {
     setSelectedPost(post);
     setShowReport(true);
+  };
+  const gridItem = ({ item }: { item: Post }) => {
+    const handlePostClick = async (item: Post) => {
+      navigation.navigate('CompletePostScreen', {
+        item: item.id,
+      });
+    };
+    return (
+      <TouchableOpacity
+        onPress={() => handlePostClick(item)}
+        style={styles.postContainer}
+      >
+        {item.imageAccessUrl && (
+          <Image
+            source={{ uri: item.imageAccessUrl }}
+            style={styles.postImage}
+          />
+        )}
+        <Text>{item.caption}ssssssss</Text>
+      </TouchableOpacity>
+    );
   };
   return (
     <View style={styles.container}>
@@ -116,6 +150,7 @@ const MyContentScreen = () => {
             </View>
           ) : (
             <FlatList
+              key={'posts'}
               data={posts}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
@@ -133,10 +168,22 @@ const MyContentScreen = () => {
               }
             />
           )
+        ) : isFirstLoad ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="#000" />
+          </View>
         ) : (
-          <Text>Show Grid Layout Here</Text>
+          <FlatList
+            key={'grid'}
+            contentContainerStyle={styles.gridContent}
+            data={posts}
+            renderItem={gridItem}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            showsVerticalScrollIndicator={false}
+          />
         )}
-
         {selectedPost && (
           <>
             <CommentSheet
@@ -163,7 +210,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   postContainer: {
-    flex: 1,
+    width: screenWidth / 2,
+    aspectRatio: 1,
   },
   tabsContainer: {
     flexDirection: 'row',
@@ -208,6 +256,15 @@ const styles = StyleSheet.create({
     padding: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  gridContent: {},
+  postImage: {
+    width: screenWidth / 2,
+    aspectRatio: 1,
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 2,
   },
 });
 

@@ -21,6 +21,7 @@ import { Comment, Post } from '../types/feed.types';
 import { send_filled_ico } from '@/src/constants';
 import OtherUserComment from './OtherUserComment';
 import MyComment from './MyComment';
+import { addCommentToMyPost } from '@/src/redux/slices/myProfileSlice';
 
 const CommentSheet = ({
   visible,
@@ -66,11 +67,18 @@ const CommentSheet = ({
         comment: commentObject,
       }),
     );
-
+    if (post.actor.uid === user.uid) {
+      dispatch(
+        addCommentToMyPost({
+          postId: post.foreign_id,
+          parentId: user.id,
+          comment: commentObject,
+        }),
+      );
+    }
     setLocalComments((prev) => [...prev, commentObject]);
     setNewComment('');
   };
-
   return (
     <Modal
       isVisible={visible}
