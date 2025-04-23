@@ -9,6 +9,7 @@ import {
   reportPost,
   fetchComments,
   addCommentToPost,
+  fetchMyPosts,
 } from '@/src/features/feed/services/feedService';
 import { Post } from '@/src/features/feed/types/feed.types';
 
@@ -63,6 +64,18 @@ export const loadForYouPosts = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const posts = await fetchForYouPosts();
+      return posts || [];
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
+export const loadUsersPosts = createAsyncThunk(
+  'myProfile/loadMyPosts',
+  async (userId: string, thunkAPI) => {
+    try {
+      const posts = await fetchMyPosts(userId);
       return posts || [];
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message);

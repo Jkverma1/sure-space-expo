@@ -1,116 +1,127 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 import {
-  avatar,
   like,
   unlike,
   comment,
   report_ico,
+  cloud_ico,
+  userAvatar,
   delete_ico,
-  share_ico,
 } from '@/src/constants';
 import { ResizeMode } from 'expo-av';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { FeedStackParamList, Post } from '../types/feed.types';
+import { toggleLike } from '@/src/redux/slices/feedSlice';
+import { AppDispatch } from '@/src/redux/store';
+import { sharePost } from '@/src/utils/functions';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const UserPost = () => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [editing, setEditing] = useState(false);
+interface OthersPostProps {
+  post: Post;
+  onOpenComments: (post: Post) => void;
+  onOpenDelete: (post: Post) => void;
+}
+
+type NavigationProp = NativeStackNavigationProp<
+  FeedStackParamList,
+  'FeedScreen'
+>;
+
+const UserPost: React.FC<OthersPostProps> = ({
+  post,
+  onOpenComments,
+  onOpenDelete,
+}) => {
   const user = useSelector((state: any) => state.user.user);
+  const [isLiked, setIsLiked] = useState(() =>
+    post.likes.some((like: any) => like.user.uid === user.uid),
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation<NavigationProp>();
+  interface HandleLikeParams {
+    postId: string;
+  }
 
-  const dummyItem = {
-    id: 'post123',
-    actor: {
-      fullName: 'John Doe',
-      avatarUrl: user.avatarUrl,
-      uid: 'user1',
-    },
-    uid: 'user2',
-    imageAccessUrl: 'https://via.placeholder.com/400',
-    videoAccessUrl: '',
-    caption: 'This is a sample caption for the post.',
-    likes: [1, 2],
-    comments: [1, 2, 3],
-    createdAt: new Date().toISOString(),
+  const handleLike = async ({ postId }: HandleLikeParams): Promise<void> => {
+    setIsLiked(!isLiked);
+    await dispatch(toggleLike({ postId, liked: isLiked, userUid: user.uid }));
   };
-
-  const handleLike = () => setIsLiked(!isLiked);
-  const handleReport = (id: string): void => console.log('Report post:', id);
-  const handleDelete = (id: string): void => console.log('Delete post:', id);
-  const handleShare = () => console.log('Share post');
-  const handleComments = () => console.log('Show comments');
-  const showProfile = () => console.log('Navigate to profile');
+  const handleDelete = async (post: Post) => {
+    onOpenDelete(post);
+  };
+  const handleComments = () => onOpenComments(post);
+  const handleShare = () => {
+    sharePost({
+      postId: post.id,
+      message: `Take a look at this amazing post by ${post.user.fullName}!`,
+    });
+  };
+  const showProfile = () => {
+    navigation.navigate('UserProfileScreen', { userId: post.actor.uid });
+  };
 
   return (
     <View style={styles.postContainer}>
-      {/* Header */}
       <View style={styles.actions_container}>
         <View style={styles.userInfo}>
           <Image
             source={
-              dummyItem.actor.avatarUrl
-                ? { uri: dummyItem.actor.avatarUrl }
-                : avatar
+              post.actor.avatarUrl ? { uri: post.actor.avatarUrl } : userAvatar
             }
             style={styles.avatar}
           />
           <Text style={styles.username} onPress={showProfile}>
-            {dummyItem.actor.fullName}
+            {post.actor.fullName}
           </Text>
         </View>
         <View style={styles.userInfo}>
           <Text style={styles.time}>
-            {new Date(dummyItem.createdAt).toLocaleDateString()}
+            {new Date(post.time).toLocaleDateString()}
           </Text>
-          <TouchableOpacity
-            style={styles.action_btn}
-            onPress={() => handleReport(dummyItem.id)}
-          >
+          {/* <TouchableOpacity style={styles.action_btn} onPress={handleReport}>
             <Image source={report_ico} style={styles.icon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 
-      {/* Media */}
-      {dummyItem.imageAccessUrl ? (
-        <Image
-          source={{ uri: dummyItem.imageAccessUrl }}
-          style={styles.postImage}
-        />
-      ) : dummyItem.videoAccessUrl ? (
+      {post.mediaType === 'image' && post.imageAccessUrl ? (
+        <Image source={{ uri: post.imageAccessUrl }} style={styles.postImage} />
+      ) : post.mediaType === 'video' && post.videoAccessUrl ? (
         <Video
-          source={{ uri: dummyItem.videoAccessUrl }}
+          source={{ uri: post.videoAccessUrl }}
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
+          style={styles.video}
         />
       ) : null}
-      <Text style={styles.caption}>{dummyItem.caption}</Text>
-      {/* Actions */}
+      <Text style={styles.caption}>{post.caption}</Text>
       <View style={{ ...styles.actions_container, marginTop: 8 }}>
         <View style={styles.actions}>
           <TouchableOpacity
             style={{ ...styles.action_btn, marginRight: 8 }}
-            onPress={handleLike}
+            onPress={() => handleLike({ postId: post.id })}
           >
             <Image source={isLiked ? like : unlike} style={styles.icon} />
-            <Text style={styles.likes}>{dummyItem.likes.length}</Text>
+            <Text style={styles.likes}>{post.likes.length}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.action_btn} onPress={handleComments}>
             <Image source={comment} style={styles.icon} />
-            <Text style={styles.comments}>{dummyItem.comments.length}</Text>
+            <Text style={styles.comments}>{post.comments.length}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.actions}>
           <TouchableOpacity onPress={handleShare}>
-            <Image source={share_ico} style={styles.icon} />
+            <Image source={cloud_ico} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDelete(post)}>
+            <Image
+              source={delete_ico}
+              style={{ marginLeft: 8, ...styles.icon }}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -160,14 +171,12 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: '100%',
-    height: 240,
-    borderRadius: 8,
+    aspectRatio: 1,
     backgroundColor: '#eee',
   },
   video: {
     width: '100%',
-    height: 240,
-    borderRadius: 8,
+    aspectRatio: 1,
     marginTop: 8,
     backgroundColor: '#000',
   },
@@ -176,13 +185,6 @@ const styles = StyleSheet.create({
     color: '#1E1D20',
     marginTop: 8,
     paddingHorizontal: 16,
-  },
-  editInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    borderRadius: 8,
-    marginTop: 8,
   },
   actions: {
     flexDirection: 'row',

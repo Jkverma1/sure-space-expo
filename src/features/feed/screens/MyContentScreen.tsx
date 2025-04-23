@@ -22,12 +22,13 @@ import {
   Post,
 } from '../types/feed.types';
 import { gallery, gallery_active, menu, menu_active } from '@/src/constants';
-import OthersPost from '../components/OthersPost';
 import ReportPostSheet from '../components/ReportPostSheet';
 import CommentSheet from '../components/CommentSheet';
 import { loadMyPosts } from '@/src/redux/slices/myProfileSlice';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import UserPost from '../components/UserPost';
+import DeleteConfirmModal from '../components/DeleteConfirmModal';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -40,7 +41,7 @@ const MyContentScreen = () => {
   const [activeTab, setActiveTab] = useState<'Posts' | 'Grid'>('Posts');
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showComments, setShowComments] = useState(false);
-  const [showReport, setShowReport] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const loading = useSelector((state: RootState) => state.myProfile.loading);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const navigation = useNavigation<NavigationProp>();
@@ -76,9 +77,9 @@ const MyContentScreen = () => {
     setShowComments(true);
   };
 
-  const handleOpenReport = (post: Post) => {
+  const handleOpenDelete = (post: Post) => {
     setSelectedPost(post);
-    setShowReport(true);
+    setShowDelete(true);
   };
   const gridItem = ({ item }: { item: Post }) => {
     const handlePostClick = async (item: Post) => {
@@ -154,10 +155,10 @@ const MyContentScreen = () => {
               data={posts}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <OthersPost
+                <UserPost
                   post={item}
                   onOpenComments={handleOpenComments}
-                  onOpenReport={handleOpenReport}
+                  onOpenDelete={handleOpenDelete}
                 />
               )}
               refreshing={loading}
@@ -191,9 +192,9 @@ const MyContentScreen = () => {
               onClose={() => setShowComments(false)}
               post={selectedPost}
             />
-            <ReportPostSheet
-              visible={showReport}
-              onClose={() => setShowReport(false)}
+            <DeleteConfirmModal
+              visible={showDelete}
+              onClose={() => setShowDelete(false)}
               post={selectedPost}
             />
           </>
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     width: '100%',
-    marginBottom: 125,
+    marginBottom: 180,
   },
   icon: {
     width: 32,

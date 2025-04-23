@@ -184,6 +184,56 @@ export const fetchComments = async (postId: string) => {
   }
 };
 
+export const getFollowers = async (uid: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/followers/${uid}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const followersRaw = response.data.data.followers;
+    const mappedFollowers = followersRaw.map((f: any) => ({
+      uid: f.uid,
+      fullName: f.fullName,
+      avatarUrl: f.avatarUrl ?? undefined,
+    }));
+    return { followers: mappedFollowers, user: response.data.data.user };
+  }
+  catch (error) {
+    console.error('Failed to fetch followers:', error);
+  }
+};
+
+export const getFollowing = async (uid: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/following/${uid}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const followingRaw = response.data.data.following;
+    const mappedFollowing = followingRaw.map((f: any) => ({
+      uid: f.uid,
+      fullName: f.fullName,
+      avatarUrl: f.avatarUrl ?? undefined,
+    }));
+    return { following: mappedFollowing, user: response.data.data.user };
+  }
+  catch (error) {
+    console.error('Failed to fetch followings:', error);
+  }
+};
+
 export const addCommentToPost = async (
   postId: string,
   parentId: string,

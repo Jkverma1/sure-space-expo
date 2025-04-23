@@ -1,127 +1,260 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-// import {getFollowers, getFollowing} from '../../services/get';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { getFollowers, getFollowing } from '../services/feedService';
+import ReportPostSheet from '../components/ReportPostSheet';
 
 import ProfileHeader from '../components/ProfileHeader';
 import FollowStats from '../components/FollowStats';
-import FollowButton from '../components/FollowButton';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/src/redux/store';
+import UserPost from '../components/UserPost';
+import CommentSheet from '../components/CommentSheet';
+
+import { fetchMyPosts } from '../services/feedService';
+import { gallery, gallery_active, menu, menu_active } from '@/src/constants';
+import { User } from '../../chat/types/chat.types';
+import { Post } from '../types/feed.types';
+import OthersPost from '../components/OthersPost';
+
+const screenWidth = Dimensions.get('window').width;
 
 const UserProfileScreen = () => {
-  const route =
-    useRoute<
-      RouteProp<{ params: { userId: string; uid: string } }, 'params'>
-    >();
+  const route = useRoute<RouteProp<{ params: { userId: string; uid: string } }, 'params'>>();
   const { userId, uid } = route.params;
-  const [userDetails, setUserDetails] = useState<{ fullName: string } | null>(
-    null,
-  );
-  // const {getUser, getBlockList, unblockUser, blockUser, handleFollow, handleUnFollow} = useAuth();
-  const getUser = (uid: string) => {
-    // Mocked implementation
-    return Promise.resolve({ data: { fullName: 'John Doe' } });
-  };
-  const getBlockList = async () => {
-    return { data: [{ id: '1' }, { id: '2' }] }; // Mocked data
-  };
-  const unblockUser = () => {};
-  const blockUser = () => {};
-  const handleFollow = () => {};
-  const handleUnFollow = () => {};
-  const user = useSelector((state: RootState) => state.user.user);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<any>>();
 
-  const [followers, setFollowers] = useState<{
-    followers: { uid: string }[];
-  } | null>(null);
-  const [following, setFollowing] = useState<{
-    following: { uid: string }[];
-  } | null>(null);
-  const [openBlock, setOpenBlock] = useState(false);
-  const [openReport, setOpenReport] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [showBlockBtn, setShowBlockBtn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [followers, setFollowers] = useState<string[]>([]);
+  const [following, setFollowing] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchFollowers = async () => {
-    // const resFollowers = await getFollowers(uid);
-    // const resFollowing = await getFollowing(uid);
-    const resFollowers = { data: { followers: [{ uid: '1' }, { uid: '2' }] } }; // Mocked data
-    const resFollowing = { data: { following: [{ uid: '3' }, { uid: '4' }] } }; // Mocked data
-    setFollowers(resFollowers.data);
-    setFollowing(resFollowing.data);
-  };
+  const [activeTab, setActiveTab] = useState<'Posts' | 'Grid'>('Posts');
+  const [showComments, setShowComments] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   useEffect(() => {
-    // const blocked: boolean = blockList?.data?.some((user: { id: string }) => user.id === userId);
     const fetchData = async () => {
-      const blockList = await getBlockList();
-      const blocked: boolean = blockList.data?.some(
-        (user: { id: string }) => user.id === userId,
-      );
-      setIsBlocked(blocked);
-      if (!blocked) {
-        const userData = await getUser(uid);
-        setUserDetails(userData.data);
-        fetchFollowers();
+      setLoading(true);
+      try {
+        const [postsRes, followersRes, followingRes] = await Promise.all([
+          fetchMyPosts(userId),
+          getFollowers(uid),
+          getFollowing(uid),
+        ]);
+        setUser(followersRes?.user || null);
+        setPosts(postsRes);
+        setFollowers(followersRes?.followers ?? []);
+        setFollowing(followingRes?.following ?? []);
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchData();
-  }, []);
+  }, [userId, uid]);
 
-  const isFollowing = () => {
-    return followers?.followers?.some((f) => f.uid === user.uid);
+  const handleOpenComments = (post: Post) => {
+    setSelectedPost(post);
+    setShowComments(true);
   };
 
-  const changeState = async () => {
-    if (isBlocked) {
-      await unblockUser();
-      setIsBlocked(false);
-    } else {
-      isFollowing() ? await handleUnFollow() : await handleFollow();
-      fetchFollowers();
-    }
+  const handleOpenReport = (post: Post) => {
+    setSelectedPost(post);
+    setShowReport(true);
   };
+
+  const renderGridItem = ({ item }: { item: Post }) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('CompletePostScreen', { item: item.id })
+      }
+      style={styles.postContainer}
+    >
+      {item.imageAccessUrl && (
+        <Image source={{ uri: item.imageAccessUrl }} style={styles.postImage} />
+      )}
+      <Text>{item.caption}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <ProfileHeader
-        showBlockBtn={showBlockBtn}
-        toggleBlockBtn={() => setShowBlockBtn(!showBlockBtn)}
-        onBlockPress={() => setOpenBlock(true)}
-      />
-      <FollowStats
-        followers={followers?.followers?.length || 0}
-        following={following?.following?.length || 0}
-        onFollowersPress={() => {
-          // followers?.followers?.length &&
-          // navigation.navigate('FollowersFollowing', {
-          //   active: 'Followers',
-          //   followers: followers,
-        }}
-        onFollowingPress={() => {
-          // following?.following?.length &&
-          // navigation.navigate('FollowersFollowing', {
-          //   active: 'Following',
-          //   followers: followers,
-          // })
-        }}
-      />
-      <FollowButton
-        isBlocked={isBlocked}
-        isFollowing={!!isFollowing()}
-        onPress={changeState}
-      />
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#000" />
+        </View>
+      ) : (
+        <>
+          <ProfileHeader
+            showBlockBtn={false}
+            toggleBlockBtn={() => {}}
+            onBlockPress={() => {}}
+            AvatarUrl={user?.avatarUrl}
+            fullName={user?.fullName}
+          />
+          <FollowStats
+            followers={followers.length}
+            following={following.length}
+            onFollowersPress={() => {}}
+            onFollowingPress={() => {}}
+          />
+
+          {/* Tabs */}
+          <View style={styles.tabsContainer}>
+            <Pressable
+              style={[styles.tab, { paddingRight: 16, borderRightWidth: 1, borderColor: '#1E1D201A' }]}
+              onPress={() => setActiveTab('Posts')}
+            >
+              <Image
+                source={activeTab === 'Posts' ? menu_active : menu}
+                style={styles.icon}
+              />
+            </Pressable>
+            <Pressable style={styles.tab} onPress={() => setActiveTab('Grid')}>
+              <Image
+                source={activeTab === 'Grid' ? gallery_active : gallery}
+                style={styles.icon}
+              />
+            </Pressable>
+          </View>
+
+          {/* Tab Content */}
+          <View style={styles.tabContent}>
+            {activeTab === 'Posts' ? (
+              <FlatList
+                key="posts"
+                data={posts}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <OthersPost
+                    post={item}
+                    onOpenComments={handleOpenComments}
+                    onOpenReport={handleOpenReport}
+                  />
+                )}
+                refreshing={loading}
+                onRefresh={async () => {
+                  setLoading(true);
+                  const refreshedPosts = await fetchMyPosts(userId);
+                  setPosts(refreshedPosts);
+                  setLoading(false);
+                }}
+                contentContainerStyle={styles.listContent}
+                ListEmptyComponent={!loading && <View style={styles.emptyState} />}
+              />
+            ) : (
+              <FlatList
+                key="grid"
+                contentContainerStyle={styles.gridContent}
+                data={posts}
+                renderItem={renderGridItem}
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+                columnWrapperStyle={styles.row}
+                showsVerticalScrollIndicator={false}
+              />
+            )}
+          </View>
+
+          {/* Modals */}
+          {selectedPost && (
+            <>
+              <CommentSheet
+                visible={showComments}
+                onClose={() => setShowComments(false)}
+                post={selectedPost}
+              />
+              <ReportPostSheet
+                visible={showReport}
+                onClose={() => setShowReport(false)}
+                post={selectedPost}
+              />
+            </>
+          )}
+        </>
+      )}
     </SafeAreaView>
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
+    paddingVertical: 16,
+  },
+  postContainer: {
+    width: screenWidth / 2,
+    aspectRatio: 1,
+  },
+  tabsContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderColor: '#1E1D201A',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  tab: {
+    marginVertical: 12,
     alignItems: 'center',
+  },
+  tabText: {
+    color: '#999',
+    fontSize: 16,
+  },
+  activeTabText: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  tabContent: {
+    width: '100%',
+    marginBottom: 180,
+  },
+  icon: {
+    width: 32,
+    height: 32,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  listContent: {
+    paddingBottom: 80,
+  },
+  emptyState: {
+    flex: 1,
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gridContent: {},
+  postImage: {
+    width: screenWidth / 2,
+    aspectRatio: 1,
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 2,
   },
 });
 

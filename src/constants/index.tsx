@@ -116,3 +116,5 @@ export const right_edge = require('../../assets/icons/Chatbot/right_edge.png');
 export const left_edge = require('../../assets/icons/Chatbot/left_edge.png');
 export const block_ico = require('../../assets/icons/block_ico.png');
 export const followIcon = require('../../assets/icons/follow.png');
+export const cloud_ico = require('../../assets/icons/cloud_ico.png');
+export const Splash_Screen = require('../../assets/images/Splash_Screen.png');

@@ -25,8 +25,8 @@ export default function MainNavigator() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: styles.tabBar,
-        tabBarItemStyle: styles.tabBarItem, 
-        tabBarLabelStyle: styles.tabBarLabel, 
+        tabBarItemStyle: styles.tabBarItem,
+        tabBarLabelStyle: styles.tabBarLabel,
         tabBarIcon: ({ focused }) => {
           let iconSource;
           switch (route.name) {
@@ -50,7 +50,7 @@ export default function MainNavigator() {
               style={{
                 height: focused ? 40 : 32,
                 resizeMode: 'contain',
-                marginBottom: 10, 
+                marginBottom: 10,
               }}
             />
           );
@@ -69,7 +69,7 @@ export default function MainNavigator() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    paddingVertical: 10, 
+    paddingVertical: 10,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     position: 'absolute',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   tabBarLabel: {
-    fontSize: 12, 
-    marginTop: 5, 
+    fontSize: 12,
+    marginTop: 5,
   },
 });

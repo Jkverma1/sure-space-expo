@@ -57,7 +57,7 @@ const OthersPost: React.FC<OthersPostProps> = ({
     });
   };
   const showProfile = () => {
-    navigation.navigate('UserProfileScreen', { userId: post.actor.uid });
+    navigation.navigate('UserProfileScreen', { userId: post.actor.id, uid: post.actor.uid });
   };
 
   return (

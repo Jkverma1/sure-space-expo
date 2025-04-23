@@ -69,6 +69,17 @@ export const addCommentToMyPost = createAsyncThunk(
   },
 );
 
+export const deleteMyPostById = createAsyncThunk(
+  'feed/deletePost',
+  async (postId: string, thunkAPI) => {
+    try {
+      return postId;
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+);
+
 const myProfileSlice = createSlice({
   name: 'myProfile',
   initialState,
@@ -101,6 +112,11 @@ const myProfileSlice = createSlice({
       .addCase(loadMyPosts.rejected, (state) => {
         state.loading = false;
       });
+    builder.addCase(deleteMyPostById.fulfilled, (state, action) => {
+      if (state.myPosts) {
+        state.myPosts = state.myPosts.filter((p) => p.id !== action.payload);
+      }
+    });
     builder.addCase(addCommentToMyPost.fulfilled, (state, action) => {
       const { postId, comment } = action.payload;
       const post = state.myPosts?.find((p) => p.id === postId);
