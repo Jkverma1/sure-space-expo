@@ -55,7 +55,7 @@ export interface MyCommentProps {
 
 export interface FeedStackParamList {
   FeedScreen: undefined;
-  UserProfileScreen: { userId: string, uid: string };
+  UserProfileScreen: { userId: string; uid: string };
   [key: string]: object | undefined;
   CompletePostScreen: { item: string };
 }

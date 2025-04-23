@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   Animated,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -44,17 +45,25 @@ const ChatMainScreen = () => {
 
   const [filteredChannels, setFilteredChannels] = useState<any[]>([]);
   const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const initialize = async () => {
-      if (cachedChannels.length === 0) {
-        const { channels, error } = await fetchChannels();
-        if (!error && channels) {
-          dispatch(setChannels({ channels }));
-          setFilteredChannels(channels);
+      setLoading(true); // Start loading
+      try {
+        if (cachedChannels.length === 0) {
+          const { channels, error } = await fetchChannels();
+          if (!error && channels) {
+            dispatch(setChannels({ channels }));
+            setFilteredChannels(channels);
+          }
+        } else {
+          setFilteredChannels(cachedChannels);
         }
-      } else {
-        setFilteredChannels(cachedChannels);
+      } catch (error) {
+        console.error('Error initializing channels:', error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
@@ -123,6 +132,15 @@ const ChatMainScreen = () => {
       channelMembers: channel.members,
     });
   };
+
+  if (loading) {
+    // Show loader while loading
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#F08080" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -271,7 +289,7 @@ const styles = StyleSheet.create({
   },
   newChatButton: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 100,
     right: 16,
     backgroundColor: '#F08080',
     padding: 10,
@@ -296,6 +314,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+    loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
 });
 

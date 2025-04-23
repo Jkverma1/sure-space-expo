@@ -30,7 +30,10 @@ import OthersPost from '../components/OthersPost';
 const screenWidth = Dimensions.get('window').width;
 
 const UserProfileScreen = () => {
-  const route = useRoute<RouteProp<{ params: { userId: string; uid: string } }, 'params'>>();
+  const route =
+    useRoute<
+      RouteProp<{ params: { userId: string; uid: string } }, 'params'>
+    >();
   const { userId, uid } = route.params;
   const navigation = useNavigation<NavigationProp<any>>();
 
@@ -117,7 +120,14 @@ const UserProfileScreen = () => {
           {/* Tabs */}
           <View style={styles.tabsContainer}>
             <Pressable
-              style={[styles.tab, { paddingRight: 16, borderRightWidth: 1, borderColor: '#1E1D201A' }]}
+              style={[
+                styles.tab,
+                {
+                  paddingRight: 16,
+                  borderRightWidth: 1,
+                  borderColor: '#1E1D201A',
+                },
+              ]}
               onPress={() => setActiveTab('Posts')}
             >
               <Image
@@ -155,7 +165,9 @@ const UserProfileScreen = () => {
                   setLoading(false);
                 }}
                 contentContainerStyle={styles.listContent}
-                ListEmptyComponent={!loading && <View style={styles.emptyState} />}
+                ListEmptyComponent={
+                  !loading && <View style={styles.emptyState} />
+                }
               />
             ) : (
               <FlatList
@@ -191,7 +203,6 @@ const UserProfileScreen = () => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

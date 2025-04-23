@@ -40,7 +40,7 @@ const ForYouScreen = () => {
     <View style={styles.container}>
       {isFirstLoad ? (
         <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#000" />
+          <ActivityIndicator size="large" color="#F08080" />
         </View>
       ) : (
         <FlatList

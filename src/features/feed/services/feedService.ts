@@ -203,8 +203,7 @@ export const getFollowers = async (uid: string) => {
       avatarUrl: f.avatarUrl ?? undefined,
     }));
     return { followers: mappedFollowers, user: response.data.data.user };
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Failed to fetch followers:', error);
   }
 };
@@ -228,9 +227,26 @@ export const getFollowing = async (uid: string) => {
       avatarUrl: f.avatarUrl ?? undefined,
     }));
     return { following: mappedFollowing, user: response.data.data.user };
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Failed to fetch followings:', error);
+  }
+};
+
+export const getPost = async (id: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/stream/activity-feeds/post/${id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('Failed to fetch post:', error);
   }
 };
 
