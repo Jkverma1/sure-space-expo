@@ -7,11 +7,11 @@ export type ProfileStackParamList = {
   CompletePostScreen: { item: string };
 };
 
-export type MenuItemType = {
+export interface MenuItemType {
   name: string;
-  screen: keyof ProfileStackParamList;
   image: any;
-};
+  screen: any;
+}
 
 export interface HeaderProps {
   title: string;

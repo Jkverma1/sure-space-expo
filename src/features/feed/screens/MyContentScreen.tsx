@@ -114,8 +114,20 @@ const MyContentScreen = () => {
       <FollowStats
         followers={followers?.length || 0}
         following={following?.length || 0}
-        onFollowersPress={() => {}}
-        onFollowingPress={() => {}}
+        onFollowersPress={() => {
+          navigation.navigate('FollowersFollowingScreen', {
+            followers: followers,
+            following: following,
+            active: 'Followers',
+          });
+        }}
+        onFollowingPress={() => {
+          navigation.navigate('FollowersFollowingScreen', {
+            followers: followers,
+            following: following,
+            active: 'Following',
+          });
+        }}
       />
 
       {/* Tabs */}

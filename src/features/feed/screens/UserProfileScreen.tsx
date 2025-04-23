@@ -56,15 +56,18 @@ const UserProfileScreen = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [userRes, postsRes, followersRes, followingRes] =
-          await Promise.all([
-            getUserByUid(uid),
-            fetchMyPosts(userId),
-            getFollowers(uid),
-            getFollowing(uid),
-          ]);
+        // Fetch user first
+        const userRes = await getUserByUid(uid);
         setUser(userRes || null);
-        setPosts(postsRes);
+        if (userRes?.id) {
+          const postsRes = await fetchMyPosts(userRes.id);
+          setPosts(postsRes);
+        }
+        const [followersRes, followingRes] = await Promise.all([
+          getFollowers(uid),
+          getFollowing(uid),
+        ]);
+
         setFollowers(followersRes?.followers ?? []);
         setFollowing(followingRes?.following ?? []);
       } catch (error) {
@@ -75,7 +78,7 @@ const UserProfileScreen = () => {
     };
 
     fetchData();
-  }, [userId, uid]);
+  }, [uid]);
 
   const handleOpenComments = (post: Post) => {
     setSelectedPost(post);
@@ -100,6 +103,7 @@ const UserProfileScreen = () => {
       <Text>{item.caption}</Text>
     </TouchableOpacity>
   );
+
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -118,8 +122,20 @@ const UserProfileScreen = () => {
           <FollowStats
             followers={followers.length}
             following={following.length}
-            onFollowersPress={() => {}}
-            onFollowingPress={() => {}}
+            onFollowersPress={() => {
+              navigation.navigate('FollowersFollowingScreen', {
+                followers: followers,
+                following: following,
+                active: 'Followers',
+              });
+            }}
+            onFollowingPress={() => {
+              navigation.navigate('FollowersFollowingScreen', {
+                followers: followers,
+                following: following,
+                active: 'Following',
+              });
+            }}
           />
 
           {/* Tabs */}
