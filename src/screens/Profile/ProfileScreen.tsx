@@ -4,6 +4,8 @@ import ProfileMainScreen from '@/src/features/profile/screens/ProfileMainScreen'
 import SettingsScreen from '@/src/features/profile/screens/SettingsScreen';
 import InviteFriendsScreen from '@/src/features/profile/screens/InviteFriendsScreen';
 import UserProfileScreen from '@/src/features/feed/screens/UserProfileScreen';
+import NotificationScreen from '@/src/features/profile/screens/NotificationScreen';
+import CompletePostScreen from '@/src/features/feed/screens/CompletePostScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +19,8 @@ export default function ProfileScreen() {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="InviteFriends" component={InviteFriendsScreen} />
       <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
+      <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+      <Stack.Screen name="CompletePostScreen" component={CompletePostScreen} />
     </Stack.Navigator>
   );
 }

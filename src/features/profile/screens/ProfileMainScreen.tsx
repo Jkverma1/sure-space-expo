@@ -1,19 +1,41 @@
-import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import {
+  Dimensions,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import MenuList from '../components/MenuList';
-import { ProfileStackParamList } from '../types/profile.types';
+import {
+  Notification,
+  NotificationCounts,
+  ProfileStackParamList,
+} from '../types/profile.types';
 
 import {
+  active_notification_icon,
+  comment_notification,
   download_ico,
+  follow_notification,
   invite_friends,
+  like_notification,
+  notification_background,
+  notification_icon,
   referal_user,
   settings,
   signed_up,
   user_image,
 } from '@/src/constants';
+import { fetchNotifications } from '../services/profileService';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { setNotifications } from '@/src/redux/slices/myProfileSlice';
+import { AppDispatch } from '@/src/redux/store';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -32,7 +54,39 @@ const menuData = [
 
 export default function ProfileMainScreen() {
   const user = useSelector((state: any) => state.user.user);
+  const [isNotification, setIsNotification] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationCounts, setNotificationCounts] = useState({
+    mention: 0,
+    post_like: 0,
+    post_comment: 0,
+    user_follow: 0,
+  });
+  const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    const fetchNotification = async () => {
+      const response = await fetchNotifications();
+      dispatch(setNotifications(response));
+      const counts: NotificationCounts = response.reduce(
+        (acc: NotificationCounts, item: Notification) => {
+          if (acc.hasOwnProperty(item.type)) {
+            acc[item.type] += 1;
+          }
+          return acc;
+        },
+        {
+          mention: 0,
+          post_like: 0,
+          post_comment: 0,
+          user_follow: 0,
+        },
+      );
+      setIsNotification(Object.values(counts).some((count) => count > 0));
+      setNotificationCounts(counts);
+    };
+    fetchNotification();
+  }, []);
   const avatarSrc =
     user?.avatarUrl && user.avatarUrl !== ''
       ? { uri: user.avatarUrl }
@@ -41,12 +95,79 @@ export default function ProfileMainScreen() {
   const referralLeft = 20 - (user?.referralCount ?? 0);
   const downloaded = user?.referralCount ?? 0;
   const signedUp = user?.referralCount ?? 0;
+  const navigation = useNavigation<NavigationProp<ProfileStackParamList>>();
+
+  const handleShowNotification = () => {
+    navigation.navigate('NotificationScreen');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text></Text>
         <Text style={styles.header_title}>Profile</Text>
+        <TouchableOpacity
+          onPress={() => {
+            setShowNotification(!showNotification);
+          }}
+          style={styles.icon}
+        >
+          <Image
+            source={
+              isNotification ? active_notification_icon : notification_icon
+            }
+            style={{
+              ...(isNotification
+                ? styles.notification_icon
+                : { width: 18, height: 21 }),
+            }}
+          />
+        </TouchableOpacity>
+        {showNotification && (
+          <TouchableOpacity
+            onPress={handleShowNotification}
+            style={styles.notification_container_wrapper}
+          >
+            <ImageBackground
+              source={notification_background}
+              resizeMode="contain"
+              style={styles.notification_container}
+            >
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}
+              >
+                <Image
+                  source={like_notification}
+                  style={styles.notification_ico}
+                />
+                <Text style={styles.notification_text}>
+                  {notificationCounts.post_like}
+                </Text>
+              </View>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}
+              >
+                <Image
+                  source={comment_notification}
+                  style={styles.notification_ico}
+                />
+                <Text style={styles.notification_text}>
+                  {notificationCounts.post_comment}
+                </Text>
+              </View>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}
+              >
+                <Image
+                  source={follow_notification}
+                  style={styles.notification_ico}
+                />
+                <Text style={styles.notification_text}>
+                  {notificationCounts.mention + notificationCounts.user_follow}
+                </Text>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.user_avatar}>
@@ -176,5 +297,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  notification_icon: {
+    width: 24,
+    height: 24,
+  },
+  icon: {
+    position: 'absolute',
+    top: 0,
+    right: 16,
+  },
+  notification_container_wrapper: {
+    position: 'absolute',
+    top: 26,
+    right: 16,
+    zIndex: 2,
+  },
+  notification_container: {
+    flexDirection: 'row',
+    minWidth: 139,
+    height: 38.67,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+    paddingTop: 6,
+    zIndex: 1,
+  },
+  notification_ico: {
+    width: 24,
+    height: 24,
+  },
+  notification_text: {
+    fontSize: 12,
+    fontFamily: 'Open Sans',
+    fontWeight: '600',
+    lineHeight: 19.07,
+    color: '#fff',
   },
 });

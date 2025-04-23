@@ -250,6 +250,24 @@ export const getPost = async (id: string) => {
   }
 };
 
+export const getUserByUid = async (id: string) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.get(
+      `/user/uid/${id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+  }
+};
+
 export const addCommentToPost = async (
   postId: string,
   parentId: string,

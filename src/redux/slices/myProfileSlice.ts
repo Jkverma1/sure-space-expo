@@ -15,12 +15,14 @@ interface MyProfileState {
   following: UserSummary[] | null;
   myPosts: any[] | null;
   loading: boolean;
+  notifications: any[] | null;
 }
 
 const initialState: MyProfileState = {
   followers: null,
   following: null,
   myPosts: null,
+  notifications: null,
   loading: false,
 };
 
@@ -93,6 +95,9 @@ const myProfileSlice = createSlice({
     setMyPosts(state, action: PayloadAction<any[]>) {
       state.myPosts = action.payload;
     },
+    setNotifications(state, action: PayloadAction<any[]>) {
+      state.notifications = action.payload;
+    },
     clearMyProfile(state) {
       state.followers = null;
       state.following = null;
@@ -141,7 +146,12 @@ const myProfileSlice = createSlice({
   },
 });
 
-export const { setFollowers, setFollowing, setMyPosts, clearMyProfile } =
-  myProfileSlice.actions;
+export const {
+  setFollowers,
+  setFollowing,
+  setMyPosts,
+  setNotifications,
+  clearMyProfile,
+} = myProfileSlice.actions;
 
 export default myProfileSlice.reducer;

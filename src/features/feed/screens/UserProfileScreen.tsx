@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { getFollowers, getFollowing } from '../services/feedService';
+import { getFollowers, getFollowing, getUserByUid } from '../services/feedService';
 import ReportPostSheet from '../components/ReportPostSheet';
 
 import ProfileHeader from '../components/ProfileHeader';
@@ -52,12 +52,13 @@ const UserProfileScreen = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [postsRes, followersRes, followingRes] = await Promise.all([
+        const [userRes, postsRes, followersRes, followingRes] = await Promise.all([
+          getUserByUid(uid),
           fetchMyPosts(userId),
           getFollowers(uid),
           getFollowing(uid),
         ]);
-        setUser(followersRes?.user || null);
+        setUser(userRes || null);
         setPosts(postsRes);
         setFollowers(followersRes?.followers ?? []);
         setFollowing(followingRes?.following ?? []);
@@ -94,12 +95,11 @@ const UserProfileScreen = () => {
       <Text>{item.caption}</Text>
     </TouchableOpacity>
   );
-
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
         <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#000" />
+          <ActivityIndicator size="large" color="#F08080" />
         </View>
       ) : (
         <>
