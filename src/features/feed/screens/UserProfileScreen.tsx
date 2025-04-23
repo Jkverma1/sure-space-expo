@@ -13,7 +13,11 @@ import {
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { getFollowers, getFollowing, getUserByUid } from '../services/feedService';
+import {
+  getFollowers,
+  getFollowing,
+  getUserByUid,
+} from '../services/feedService';
 import ReportPostSheet from '../components/ReportPostSheet';
 
 import ProfileHeader from '../components/ProfileHeader';
@@ -52,12 +56,13 @@ const UserProfileScreen = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [userRes, postsRes, followersRes, followingRes] = await Promise.all([
-          getUserByUid(uid),
-          fetchMyPosts(userId),
-          getFollowers(uid),
-          getFollowing(uid),
-        ]);
+        const [userRes, postsRes, followersRes, followingRes] =
+          await Promise.all([
+            getUserByUid(uid),
+            fetchMyPosts(userId),
+            getFollowers(uid),
+            getFollowing(uid),
+          ]);
         setUser(userRes || null);
         setPosts(postsRes);
         setFollowers(followersRes?.followers ?? []);

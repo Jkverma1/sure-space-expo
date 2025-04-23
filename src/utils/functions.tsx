@@ -24,3 +24,29 @@ export const sharePost = async ({
     }
   }
 };
+
+export const jwtDecode = (token: string) => {
+  const base64Url = token?.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const rawPayload = atob(base64);
+  const jsonPayload = decodeURIComponent(
+    Array.prototype.map
+      .call(rawPayload, (c) => {
+        return `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`;
+      })
+      .join(''),
+  );
+
+  return JSON.parse(jsonPayload);
+};
+
+export const isValidToken = (accessToken: string) => {
+  if (!accessToken) {
+    return false;
+  }
+
+  const decoded = jwtDecode(accessToken);
+  const currentTime = Date.now() / 1000;
+
+  return decoded.exp > currentTime;
+};

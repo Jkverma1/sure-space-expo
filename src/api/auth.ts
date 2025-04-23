@@ -31,7 +31,9 @@ export const loginUser = async (email: string, password: string) => {
     });
     if (response.data.code === 200)
       await AsyncStorage.setItem('token', idToken);
-    return response.data;
+    const idTokenResult = await firebaseUser.getIdTokenResult();
+    const tokenExpiry = idTokenResult.expirationTime;
+    return { user: response.data.data, tokenExpiry: tokenExpiry };
   } catch (error) {
     console.log('Error logging in:', error);
     throw error;
