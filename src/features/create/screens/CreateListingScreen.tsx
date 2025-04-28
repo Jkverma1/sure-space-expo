@@ -93,10 +93,10 @@ const CreateListingScreen = () => {
       <Header title="Create" showBack={false} />
 
       <View style={styles.createContainer}>
-        <TouchableOpacity style={styles.createItem}>
+        {/* <TouchableOpacity style={styles.createItem}>
           <Image source={generate_image} style={styles.icon} />
           <Text style={styles.createItemText}>Generate Comic with AI</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={styles.createItem} onPress={handleUpload}>
           <Image source={upload_image} style={styles.icon} />
           <Text style={styles.createItemText}>Upload my Content</Text>

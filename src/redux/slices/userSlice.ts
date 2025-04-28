@@ -60,14 +60,16 @@ export const login =
     try {
       const userData = await loginUser(email, password);
       const { user, tokenExpiry } = userData;
+
       await AsyncStorage.setItem('email', email);
       await AsyncStorage.setItem('password', password);
 
-      dispatch(loginSuccess({ user, tokenExpiry }));
+      dispatch(loginSuccess(user));
       if (tokenExpiry) {
         dispatch(scheduleTokenRefresh(tokenExpiry));
       }
-      return 'Login successful';
+
+      return { data: { user, tokenExpiry } };
     } catch (error) {
       console.log('Login failed:', error);
       return 'Invalid credentials.';
@@ -140,7 +142,7 @@ const userSlice = createSlice({
     },
     loginSuccess: (
       state,
-      action: PayloadAction<{ user: any; tokenExpiry?: string }>,
+      action: PayloadAction<{ user: any; tokenExpiry?: string }>
     ) => {
       state.isAuthenticated = true;
       state.user = action.payload.user;

@@ -21,13 +21,10 @@ type ChatScreenNavigationProp = NativeStackNavigationProp<
   'NewChatScreen'
 >;
 
-// const mockedFollowers = [{ uid: '2', fullName: 'Jane Doe', id: '2' }];
-// const mockedFollowing = [{ uid: '3', fullName: 'Bob Smith', id: '3' }];
-
 const NewChatScreen = () => {
   const user = useSelector((state: any) => state.user.user);
   const { followers, following } = useSelector(
-    (state: any) => state.user.user?.followers || [],
+    (state: any) => state.myProfile || [],
   );
   const navigation = useNavigation<ChatScreenNavigationProp>();
   const [users, setUsers] = useState<User[]>([]);
@@ -36,8 +33,8 @@ const NewChatScreen = () => {
 
   useEffect(() => {
     const allUsers = [
-      ...(followers?.followers || []),
-      ...(following?.following || []),
+      ...(followers || []),
+      ...(following || []),
     ];
     const uniqueUsers = Array.from(
       new Map(

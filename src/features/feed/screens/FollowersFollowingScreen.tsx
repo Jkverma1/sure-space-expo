@@ -65,20 +65,20 @@ const FollowersFollowingScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header title={activeTab.toLowerCase()} />
+      <Header title={activeTab} />
       {/* Tabs */}
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'Followers' && styles.activeTab]}
           onPress={() => setActiveTab('Followers')}
         >
-          <Text style={styles.tabText}>followers</Text>
+          <Text style={styles.tabText}>Followers</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'Following' && styles.activeTab]}
           onPress={() => setActiveTab('Following')}
         >
-          <Text style={styles.tabText}>following</Text>
+          <Text style={styles.tabText}>Following</Text>
         </TouchableOpacity>
       </View>
 
@@ -89,7 +89,7 @@ const FollowersFollowingScreen = () => {
           return (
               <View key={index} style={styles.followerItem}>
               <Image
-                source={userAvatar}
+                source={item.avatarUrl ? { uri: item.avatarUrl } : userAvatar}
                 style={styles.profileImage}
               />
               <Text style={styles.username} onPress={() => showProfile(item)}>

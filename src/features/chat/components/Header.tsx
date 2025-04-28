@@ -27,9 +27,9 @@ const Header: React.FC<HeaderProps> = ({
     if (backScreen?.length > 0) {
       const { channels, error } = await fetchChannels();
       if (!error && channels) {
+        navigation.navigate(backScreen as never);
         dispatch(setChannels({ channels }));
       }
-      navigation.navigate(backScreen as never);
     } else {
       navigation.goBack();
     }

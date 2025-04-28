@@ -24,6 +24,9 @@ import {
   CreateStackParamList,
 } from '../types/profile.types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { loadMyPosts } from '@/src/redux/slices/myProfileSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/src/redux/store';
 
 type NavigationProp = NativeStackNavigationProp<
   CreateStackParamList,
@@ -40,11 +43,12 @@ const ConfirmPostScreen = () => {
     useRoute<RouteProp<{ params: ConfirmPostScreenRouteParams }, 'params'>>();
   const navigation = useNavigation<NavigationProp>();
   const { mediaUrl, mediaType } = route.params;
-
+  const user = useSelector((state: any) => state.user.user);
   const [caption, setCaption] = useState('');
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
   const [users, setUsers] = useState<{ id: string; name: string }[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -120,6 +124,7 @@ const ConfirmPostScreen = () => {
       formData.append('extraData', JSON.stringify({ caption }));
 
       await savePost(formData);
+      dispatch(loadMyPosts(user.id))
       navigation.navigate('Community');
     } catch (err) {
       console.error('Error posting content:', err);

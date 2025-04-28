@@ -98,7 +98,7 @@ const MyContentScreen = () => {
             style={styles.postImage}
           />
         )}
-        <Text>{item.caption}ssssssss</Text>
+        <Text>{item.caption}</Text>
       </TouchableOpacity>
     );
   };
