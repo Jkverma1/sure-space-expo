@@ -91,7 +91,7 @@ export const fetchChannels = async (): Promise<{
     });
     return { channels: response.data.data, error: null };
   } catch (error) {
-    console.error('Error fetching channels:', error);
+    console.log('Error fetching channels:', error);
     return { channels: [], error };
   }
 };
@@ -196,7 +196,7 @@ export const fetchAllUsers = async () => {
     const response = await client?.queryUsers({}, { name: 1 }, { limit: 100 });
     return response?.users;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.log('Error fetching users:', error);
     return [];
   }
 };

@@ -91,7 +91,7 @@ export const fetchAndCacheFollowers = async (
 
     dispatch(setFollowers(mappedFollowers));
   } catch (error) {
-    console.error('Failed to fetch followers:', error);
+    console.log('Failed to fetch followers:', error);
   }
 };
 
@@ -119,6 +119,6 @@ export const fetchAndCacheFollowing = async (
 
     dispatch(setFollowing(mappedFollowings));
   } catch (error) {
-    console.error('Failed to fetch followers:', error);
+    console.log('Failed to fetch followers:', error);
   }
 };

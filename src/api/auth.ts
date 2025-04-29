@@ -49,7 +49,7 @@ export const logoutUser = async () => {
       message: 'Logged out successfully.',
     };
   } catch (error) {
-    console.error('Error logging out:', error);
+    console.log('Error logging out:', error);
     throw error;
   }
 };

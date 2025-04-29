@@ -43,7 +43,7 @@ const CompletePostScreen = () => {
         const response = await getPost(item);
         setPost(response);
       } catch (error) {
-        console.error('Error fetching post:', error);
+        console.log('Error fetching post:', error);
         Alert.alert('Error', 'Failed to load the post. Please try again.');
       } finally {
         setLoading(false);

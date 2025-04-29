@@ -204,7 +204,7 @@ export const getFollowers = async (uid: string) => {
     }));
     return { followers: mappedFollowers, user: response.data.data.user };
   } catch (error) {
-    console.error('Failed to fetch followers:', error);
+    console.log('Failed to fetch followers:', error);
   }
 };
 
@@ -228,7 +228,7 @@ export const getFollowing = async (uid: string) => {
     }));
     return { following: mappedFollowing, user: response.data.data.user };
   } catch (error) {
-    console.error('Failed to fetch followings:', error);
+    console.log('Failed to fetch followings:', error);
   }
 };
 
@@ -246,7 +246,7 @@ export const getPost = async (id: string) => {
     );
     return response.data.data;
   } catch (error) {
-    console.error('Failed to fetch post:', error);
+    console.log('Failed to fetch post:', error);
   }
 };
 
@@ -261,7 +261,7 @@ export const getUserByUid = async (id: string) => {
     });
     return response.data.data;
   } catch (error) {
-    console.error('Failed to fetch user:', error);
+    console.log('Failed to fetch user:', error);
   }
 };
 

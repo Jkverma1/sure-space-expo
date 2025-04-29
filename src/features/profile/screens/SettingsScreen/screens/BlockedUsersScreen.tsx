@@ -47,7 +47,7 @@ const BlockedUsersScreen = () => {
       const response = await getBlockList();
       setBlocklist(response.data);
     } catch (error) {
-      console.error('Error fetching blocklist:', error);
+      console.log('Error fetching blocklist:', error);
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +62,7 @@ const BlockedUsersScreen = () => {
       await unblockUser(id);
       fetchBlocklist();
     } catch (error) {
-      console.error('Error unblocking user:', error);
+      console.log('Error unblocking user:', error);
     }
   };
 

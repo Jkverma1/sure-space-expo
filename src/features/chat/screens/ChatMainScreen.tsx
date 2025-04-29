@@ -61,7 +61,7 @@ const ChatMainScreen = () => {
           setFilteredChannels(cachedChannels);
         }
       } catch (error) {
-        console.error('Error initializing channels:', error);
+        console.log('Error initializing channels:', error);
       } finally {
         setLoading(false); // Stop loading
       }

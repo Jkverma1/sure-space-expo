@@ -127,7 +127,7 @@ const ConfirmPostScreen = () => {
       dispatch(loadMyPosts(user.id))
       navigation.navigate('Community');
     } catch (err) {
-      console.error('Error posting content:', err);
+      console.log('Error posting content:', err);
       Alert.alert('Error', 'Failed to post content. Please try again.');
     } finally {
       setPosting(false);

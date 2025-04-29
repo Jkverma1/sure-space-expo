@@ -61,7 +61,7 @@ export default function ForgotPasswordScreen() {
 
       navigation.navigate('Login' as never);
     } catch (error: any) {
-      console.error('Reset error:', error);
+      console.log('Reset error:', error);
       setErrorMessage(error.message || 'Something went wrong.');
     } finally {
       setIsLoading(false);

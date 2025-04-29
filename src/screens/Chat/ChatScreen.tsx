@@ -18,7 +18,7 @@ const ChatScreen = () => {
       try {
         await initializeChatSession(user);
       } catch (error) {
-        console.error('Failed to initialize chat session:', error);
+        console.log('Failed to initialize chat session:', error);
       } finally {
         setIsInitializing(false);
       }

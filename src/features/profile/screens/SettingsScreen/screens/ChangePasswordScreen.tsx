@@ -68,7 +68,7 @@ const ChangePasswordScreen = () => {
       navigation.navigate('PasswordChanged');
       setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      console.log(error);
       setReason('An error occurred. Please try again.');
       setIsLoading(false);
     }

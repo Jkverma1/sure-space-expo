@@ -71,7 +71,7 @@ const UserProfileScreen = () => {
         setFollowers(followersRes?.followers ?? []);
         setFollowing(followingRes?.following ?? []);
       } catch (error) {
-        console.error('Error loading user profile:', error);
+        console.log('Error loading user profile:', error);
       } finally {
         setLoading(false);
       }

@@ -92,7 +92,7 @@ const PersonalInformationScreen = () => {
       }
       setEditMode(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.log('Error updating profile:', error);
     } finally {
       setIsLoading(false);
     }
