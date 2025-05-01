@@ -53,7 +53,7 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     const res = await dispatch(login(email, password));
-    setError(res);
+    setError(typeof res === 'string' ? res : 'An unexpected error occurred');
     setIsLoading(false);
   };
 

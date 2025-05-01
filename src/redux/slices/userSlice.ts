@@ -63,7 +63,6 @@ export const login =
 
       await AsyncStorage.setItem('email', email);
       await AsyncStorage.setItem('password', password);
-
       dispatch(loginSuccess(user));
       if (tokenExpiry) {
         dispatch(scheduleTokenRefresh(tokenExpiry));

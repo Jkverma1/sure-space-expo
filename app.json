@@ -2,7 +2,7 @@
   "expo": {
     "name": "sure-space",
     "slug": "sure-space",
-    "version": "1.0.0",
+    "version": "1.0.013",
     "extra": {
       "HOST_URL": "http://172.191.158.85:5000",
       "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyC2azTbonyQZIQ_ZYLtZMKZN62NR0iPymo",
@@ -13,7 +13,10 @@
       "EXPO_PUBLIC_FIREBASE_APP_ID": "1:1073724389439:web:3aa8f5c481f5a09aa9a08a",
       "EXPO_FIREBASE_MEASUREMENT_ID": "G-2NBV905LZJ",
       "EXPO_STREAM_CHAT_API_KEY": "u4t7pcggw6mp",
-      "EXPO_STREAM_CHAT_APP_ID": "1366284"
+      "EXPO_STREAM_CHAT_APP_ID": "1366284",
+      "eas": {
+        "projectId": "107d0459-57ee-4f61-afa4-ae1e67d07ca7"
+      }
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +40,8 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
